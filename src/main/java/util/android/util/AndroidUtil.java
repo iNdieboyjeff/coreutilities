@@ -152,7 +152,6 @@ public final class AndroidUtil {
 	public static boolean isAndroidTV(Context context) {
 		// Check if the telephony hardware feature is available.
 		if (context.getPackageManager().hasSystemFeature("android.hardware.telephony")) {
-		    Log.d("Mobile Test", "Running on phone");
 		    return false;
 		// Check if android.hardware.touchscreen feature is available.
 		} else if (context.getPackageManager().hasSystemFeature("android.hardware.touchscreen")) {
@@ -177,7 +176,7 @@ public final class AndroidUtil {
 
     public static boolean isFireTVStick(Context context) {
         return android.os.Build.MANUFACTURER.equals("Amazon")
-                &&  android.os.Build.MODEL.equals("AFTB") ;
+                &&  android.os.Build.MODEL.equals("AFTM") ;
     }
 
 	public static boolean isBlackberry() {
