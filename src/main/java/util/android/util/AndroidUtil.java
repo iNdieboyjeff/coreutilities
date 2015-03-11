@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Jeff Sutton.
+ * Copyright ï¿½ 2013 Jeff Sutton.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public final class AndroidUtil {
 	 */
 	public static final int ANDROID_VERSION_CODE_GINGERBREAD = 0x00000009;
 
-	public static final String VERSION_NAME = "1.3";
+	public static final String VERSION_NAME = "1.4";
 
 	/**
 	 * <p>
@@ -165,6 +165,21 @@ public final class AndroidUtil {
 		}
 	}
 
+    public static boolean isFireTV(Context context) {
+        return android.os.Build.MANUFACTURER.equals("Amazon")
+                &&  android.os.Build.MODEL.startsWith("AFT") ;
+    }
+
+    public static boolean isFireTVBox(Context context) {
+        return android.os.Build.MANUFACTURER.equals("Amazon")
+                &&  android.os.Build.MODEL.equals("AFTB") ;
+    }
+
+    public static boolean isFireTVStick(Context context) {
+        return android.os.Build.MANUFACTURER.equals("Amazon")
+                &&  android.os.Build.MODEL.equals("AFTB") ;
+    }
+
 	public static boolean isBlackberry() {
 		if (android.os.Build.BRAND.toLowerCase().contains("blackberry")
 				|| java.lang.System.getProperty("os.name").equals("qnx")) {
@@ -258,6 +273,9 @@ public final class AndroidUtil {
 	 * @return String
 	 */
 	public static String getDeviceTypeID(Context context) {
+        if (isGoogleTV(context) || isAndroidTV(context) || isFireTV(context)) {
+            return "TV";
+        }
 		double size = tabletSize(context);
 		if (size < 7) {
 			return "Mobile";

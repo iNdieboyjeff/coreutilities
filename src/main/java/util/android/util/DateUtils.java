@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013-2014 Jeff Sutton.
+ * Copyright ï¿½ 2013-2014 Jeff Sutton.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
 
+import android.content.Context;
+import android.text.format.DateFormat;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 
@@ -201,6 +203,27 @@ public class DateUtils {
 		sdf.applyPattern(timeMasks[format]);
 		return sdf.format(time);
 	}
+
+    private static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
+        Date now = Calendar.getInstance().getTime();
+
+        // Different formatters for 12 and 24 hour timestamps
+        SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
+
+        // According to users preferences the OS clock is displayed in 24 hour format
+        if (DateFormat.is24HourFormat(context)) {
+            return formatter24;
+        }
+
+        return formatter12;
+    }
+
+    public static final String formatUserPrefTime(Context context, Date time, TimeZone timezone) {
+        SimpleDateFormat sdf = getLocalizedHHMMStamp(context);
+        sdf.setTimeZone(timezone);
+        return sdf.format(time);
+    }
 
 	/**
 	 * <p>
