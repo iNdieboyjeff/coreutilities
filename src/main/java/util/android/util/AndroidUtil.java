@@ -16,7 +16,6 @@
 
 package util.android.util;
 
-import java.util.Locale;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -37,6 +36,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewConfiguration;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 public final class AndroidUtil {
 
@@ -155,11 +156,8 @@ public final class AndroidUtil {
 		    return false;
 		// Check if android.hardware.touchscreen feature is available.
 		} else if (context.getPackageManager().hasSystemFeature("android.hardware.touchscreen")) {
-		    Log.d("Tablet Test", "Running on devices that don't support telephony but "+
-		            "do have a touch screen.");
 		    return false;
 		} else {
-		    Log.d("TV Test", "Running on a TV!");
 		    return true;
 		}
 	}

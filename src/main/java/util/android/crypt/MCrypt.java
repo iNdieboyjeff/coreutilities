@@ -1,11 +1,10 @@
 package util.android.crypt;
 
-import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.NoSuchAlgorithmException;
 
 public class MCrypt {
 
@@ -90,14 +89,14 @@ public class MCrypt {
 		}
 
 		int len = data.length;
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < len; i++) {
 			if ((data[i] & 0xFF) < 16)
-				str = str + "0" + java.lang.Integer.toHexString(data[i] & 0xFF);
+				str.append("0" + java.lang.Integer.toHexString(data[i] & 0xFF));
 			else
-				str = str + java.lang.Integer.toHexString(data[i] & 0xFF);
+				str.append(java.lang.Integer.toHexString(data[i] & 0xFF));
 		}
-		return str;
+		return str.toString();
 	}
 
 	public static byte[] hexToBytes(String str) {

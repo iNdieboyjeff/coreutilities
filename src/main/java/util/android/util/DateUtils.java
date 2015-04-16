@@ -15,23 +15,18 @@
  */
 package util.android.util;
 
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-import java.util.TimeZone;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.Log;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
+import java.net.InetAddress;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtils {
@@ -67,6 +62,10 @@ public class DateUtils {
 			"th", "st"
 	};
 
+    public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
+    public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
+    public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
+
 	public static final int TIME_FORMAT_MICRO = 0;
 	public static final int TIME_FORMAT_SECONDS = 1;
 	public static final int TIME_FORMAT_MINUTES = 2;
@@ -84,7 +83,7 @@ public class DateUtils {
 
 	/**
 	 * <p>
-	 * Parse the supplied date and return an ISO/SQL compatable date string in the format <i>yyyy-mm-dd</i>.
+	 * Parse the supplied date and return an ISO/SQL compatible date string in the format <i>yyyy-mm-dd</i>.
 	 * </p>
 	 * 
 	 * @param inDate
@@ -167,7 +166,7 @@ public class DateUtils {
 	}
 
 	public static final Date parseAtomDate(String dateString) {
-		return parseAtomDate(dateString, TimeZone.getTimeZone("UTC"));
+		return parseAtomDate(dateString, TZ_LONDON);
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -177,7 +176,6 @@ public class DateUtils {
 		for (int n = 0; n < timeMasks.length; n++) {
 			try {
 				sdf.applyPattern(timeMasks[n]);
-				// sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				sdf.setLenient(true);
 				d = sdf.parse(dateString, new ParsePosition(0));
 				if (d != null)
@@ -246,7 +244,7 @@ public class DateUtils {
 	 * @return Date
 	 */
 	public static final Date parseOrdinalDate(String dateString) throws IllegalArgumentException {
-		return parseOrdinalDate(dateString, TimeZone.getTimeZone("GMT"));
+		return parseOrdinalDate(dateString, TZ_LONDON);
 	}
 
 	public static Date getTwitterDate(String date) throws ParseException {
@@ -436,19 +434,37 @@ public class DateUtils {
 
 			long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
 			Date time = new Date(returnTime);
-			Log.i("DateUtils", "---- getNTPTime() " + inetAddress.getCanonicalHostName() + " (" + inetAddress.getHostAddress() + ") ----------");
-			Log.i("DateUtils", "---- getNTPTime() " + formatAtomDate(time) + " ----------");
-			Log.i("DateUtils", "---- getNTPTime() delay: " + timeInfo.getDelay() + ", offset: " + timeInfo.getOffset()
-					+ " ----------");
-			Log.i("DateUtils", "---- getNTPTime() " + new String(timeInfo.getMessage().getDatagramPacket().getData())
-					+ " ----------");
 			timeClient.close();
 			return time;
 		} catch (Exception e) {
-			Log.e("DateUtils", "---- getNTPTime() ERROR ----------");
 			e.printStackTrace();
 			return new Date();
 		}
 	}
+
+    public static Date toNearestWholeMinute(Date d, boolean canRoundUp) {
+        Calendar c = new GregorianCalendar();
+        c.setTime(d);
+
+        if (canRoundUp && c.get(Calendar.SECOND) >= 30)
+            c.add(Calendar.MINUTE, 1);
+
+        c.set(Calendar.SECOND, 0);
+
+        return c.getTime();
+    }
+
+    public static Date toNearestWholeHour(Date d, boolean canRoundUp) {
+        Calendar c = new GregorianCalendar();
+        c.setTime(d);
+
+        if (canRoundUp && c.get(Calendar.MINUTE) >= 30)
+            c.add(Calendar.HOUR, 1);
+
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+
+        return c.getTime();
+    }
 
 }
