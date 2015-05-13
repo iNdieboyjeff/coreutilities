@@ -450,6 +450,7 @@ public class DateUtils {
             c.add(Calendar.MINUTE, 1);
 
         c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
 
         return c.getTime();
     }
@@ -463,6 +464,7 @@ public class DateUtils {
 
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
 
         return c.getTime();
     }
