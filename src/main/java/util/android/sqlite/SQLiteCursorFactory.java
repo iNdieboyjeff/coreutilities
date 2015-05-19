@@ -21,8 +21,6 @@ public class SQLiteCursorFactory implements CursorFactory {
 
 	private boolean	debugQueries	= false;
 
-    private static int openCursors = 0;
-
 	public SQLiteCursorFactory() {
 		this.debugQueries = false;
 	}
@@ -38,7 +36,7 @@ public class SQLiteCursorFactory implements CursorFactory {
 		if (debugQueries) {
 			Log.d("SQL", query.toString());
 		}
-        openCursors++;
+
 		if (AndroidUtil.getAndroidVersion() >= Build.VERSION_CODES.HONEYCOMB) {
 			return new TrackingCursor(masterQuery, editTable, query);
 		} else {

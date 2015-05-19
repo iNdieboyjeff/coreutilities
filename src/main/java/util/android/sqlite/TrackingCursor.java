@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQuery;
 import android.util.Log;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class TrackingCursor extends SQLiteCursor {
 
-    private static List<Cursor> openCursors = new LinkedList<Cursor>();
+    private static List<Cursor> openCursors = Collections.synchronizedList(new LinkedList<Cursor>());
 
     public TrackingCursor(SQLiteDatabase db, SQLiteCursorDriver driver,
                           String editTable, SQLiteQuery query) {

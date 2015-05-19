@@ -151,6 +151,9 @@ public final class AndroidUtil {
 	}
 	
 	public static boolean isAndroidTV(Context context) {
+        if (isFireTV(context) || isLycaTVBox(context)) {
+            return true;
+        }
 		// Check if the telephony hardware feature is available.
 		if (context.getPackageManager().hasSystemFeature("android.hardware.telephony")) {
 		    return false;
@@ -175,6 +178,10 @@ public final class AndroidUtil {
     public static boolean isFireTVStick(Context context) {
         return android.os.Build.MANUFACTURER.equals("Amazon")
                 &&  android.os.Build.MODEL.equals("AFTM") ;
+    }
+
+    public static boolean isLycaTVBox(Context context) {
+        return android.os.Build.MODEL.equalsIgnoreCase("eztv3") ;
     }
 
 	public static boolean isBlackberry() {
