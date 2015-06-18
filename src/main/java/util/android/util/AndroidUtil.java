@@ -181,7 +181,7 @@ public final class AndroidUtil {
     }
 
     public static boolean isLycaTVBox(Context context) {
-        return android.os.Build.MODEL.equalsIgnoreCase("eztv3") ;
+        return android.os.Build.MODEL.equalsIgnoreCase("eztv3") || android.os.Build.MODEL.startsWith("LycaTV");
     }
 
 	public static boolean isBlackberry() {
