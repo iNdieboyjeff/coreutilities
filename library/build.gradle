@@ -5,7 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android'
-    version = '1.4.1'
+    version = '1.4.3'
 }
 
 android {
@@ -77,6 +77,7 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
+    title = 'Core Utitlities ' + version
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 

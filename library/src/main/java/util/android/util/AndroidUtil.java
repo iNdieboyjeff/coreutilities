@@ -34,7 +34,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -296,9 +298,11 @@ public final class AndroidUtil {
         return context.getResources().getString(string);
     }
 
-    public static float getSmallestWidth(Activity activity) {
+    public static float getSmallestWidth(Context activity) {
         DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        display.getMetrics(metrics);
 
         int widthInPixels = metrics.widthPixels;
         int heightInPixels = metrics.heightPixels;
@@ -346,7 +350,7 @@ public final class AndroidUtil {
      */
     public static boolean isTablet(Context context) {
 
-        return tabletSize(context) > 6.5;
+        return tabletSize(context) > 6.8;
     }
 
     public static void openActivity(Context context, Class<?> activity) {
@@ -395,6 +399,17 @@ public final class AndroidUtil {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources()
                 .getDisplayMetrics());
     }
+
+    public static int convertDpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
+
+    }
+
+    public static int convertPxToDp(Context context, int px) {
+        return pxToDp(context, px);
+    }
+
 
     /*
      * UI & WIDGETS
