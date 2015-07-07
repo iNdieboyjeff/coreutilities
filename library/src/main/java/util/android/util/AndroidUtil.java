@@ -182,6 +182,16 @@ public final class AndroidUtil {
                 && Build.MODEL.equals("AFTM");
     }
 
+    public static boolean isFirePhone(Context context) {
+        return Build.MANUFACTURER.equals("Amazon")
+                && Build.MODEL.startsWith("SD4930UR");
+    }
+
+    public static boolean isKindleTablet() {
+        return Build.MANUFACTURER.equals("Amazon")
+                && (Build.MODEL.equals("Kindle Fire") || Build.MODEL.startsWith("KF"));
+    }
+
     public static boolean isLycaTVBox(Context context) {
         return Build.MODEL.equalsIgnoreCase("eztv3") || Build.MODEL.startsWith("LycaTV");
     }
