@@ -1,5 +1,7 @@
 package util.android.util;
 
+import android.content.Context;
+
 import org.apache.http.conn.util.InetAddressUtils;
 
 import java.io.BufferedInputStream;
@@ -138,5 +140,24 @@ public class NetworkUtils {
         } catch (Exception ex) {
         } // for now eat exceptions
         return "";
+    }
+
+    public static String getProxyDetails(Context context) {
+        String proxyAddress = new String();
+        try {
+            if (AndroidUtil.getAndroidVersion() < AndroidUtil.ANDROID_VERSION_CODE_ICS) {
+                proxyAddress = android.net.Proxy.getHost(context);
+                if (proxyAddress == null || proxyAddress.equals("")) {
+                    return proxyAddress;
+                }
+                proxyAddress += ":" + android.net.Proxy.getPort(context);
+            } else {
+                proxyAddress = System.getProperty("http.proxyHost");
+                proxyAddress += ":" + System.getProperty("http.proxyPort");
+            }
+        } catch (Exception ex) {
+            //ignore
+        }
+        return proxyAddress;
     }
 }
