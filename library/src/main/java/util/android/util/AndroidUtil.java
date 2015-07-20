@@ -23,7 +23,6 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
@@ -33,10 +32,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.ViewConfiguration;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -68,45 +64,9 @@ public final class AndroidUtil {
      */
     public static final int ANDROID_VERSION_CODE_GINGERBREAD = 0x00000009;
 
-    public static final String VERSION_NAME = "1.4";
+    public static final String VERSION_NAME = "1.5";
 
-    /**
-     * <p>
-     * Force an activity to be fixed in portrait orientation
-     * </p>
-     *
-     * @param activity
-     */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    public static void forceLandscape(Activity activity) {
-        if (getAndroidVersion() < Build.VERSION_CODES.GINGERBREAD) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
-    }
 
-    /**
-     * <p>
-     * Force an activity to be fixed in landscape orientation
-     * </p>
-     *
-     * @param activity
-     */
-    public static void forcePortrait(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-    /**
-     * <p>
-     * Allow activity to use sensor to determine own orientation
-     * </p>
-     *
-     * @param activity
-     */
-    public static void forceSensor(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-    }
 
     /**
      * <p>
@@ -141,68 +101,7 @@ public final class AndroidUtil {
         return hasNavigationBar;
     }
 
-    public static boolean isKindleFire() {
-        return Build.MANUFACTURER.equals("Amazon")
-                && (Build.MODEL.equals("Kindle Fire") || Build.MODEL.startsWith("KF")
-                || Build.MODEL.startsWith("AFT") || Build.MODEL.startsWith("SD4930UR"));
-    }
 
-    public static boolean isGoogleTV(Context context) {
-        final PackageManager pm = context.getPackageManager();
-        return pm.hasSystemFeature("com.google.android.tv");
-    }
-
-    public static boolean isAndroidTV(Context context) {
-        if (isFireTV(context) || isLycaTVBox(context)) {
-            return true;
-        }
-        // Check if the telephony hardware feature is available.
-        if (context.getPackageManager().hasSystemFeature("android.hardware.telephony")) {
-            return false;
-            // Check if android.hardware.touchscreen feature is available.
-        } else if (context.getPackageManager().hasSystemFeature("android.hardware.touchscreen")) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isFireTV(Context context) {
-        return Build.MANUFACTURER.equals("Amazon")
-                && Build.MODEL.startsWith("AFT");
-    }
-
-    public static boolean isFireTVBox(Context context) {
-        return Build.MANUFACTURER.equals("Amazon")
-                && Build.MODEL.equals("AFTB");
-    }
-
-    public static boolean isFireTVStick(Context context) {
-        return Build.MANUFACTURER.equals("Amazon")
-                && Build.MODEL.equals("AFTM");
-    }
-
-    public static boolean isFirePhone(Context context) {
-        return Build.MANUFACTURER.equals("Amazon")
-                && Build.MODEL.startsWith("SD4930UR");
-    }
-
-    public static boolean isKindleTablet() {
-        return Build.MANUFACTURER.equals("Amazon")
-                && (Build.MODEL.equals("Kindle Fire") || Build.MODEL.startsWith("KF"));
-    }
-
-    public static boolean isLycaTVBox(Context context) {
-        return Build.MODEL.equalsIgnoreCase("eztv3") || Build.MODEL.startsWith("LycaTV");
-    }
-
-    public static boolean isBlackberry() {
-        if (Build.BRAND.toLowerCase().contains("blackberry")
-                || System.getProperty("os.name").equals("qnx")) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * <p>
@@ -289,7 +188,7 @@ public final class AndroidUtil {
      * @return String
      */
     public static String getDeviceTypeID(Context context) {
-        if (isGoogleTV(context) || isAndroidTV(context) || isFireTV(context)) {
+        if (DeviceUtils.isGoogleTV(context) || DeviceUtils.isAndroidTV(context) || DeviceUtils.isFireTV(context)) {
             return "TV";
         }
         double size = tabletSize(context);
@@ -308,23 +207,9 @@ public final class AndroidUtil {
         return context.getResources().getString(string);
     }
 
+    @Deprecated
     public static float getSmallestWidth(Context activity) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        display.getMetrics(metrics);
-
-        int widthInPixels = metrics.widthPixels;
-        int heightInPixels = metrics.heightPixels;
-
-        float scaleFactor = metrics.density;
-
-        float widthDp = widthInPixels / scaleFactor;
-        float heightDp = heightInPixels / scaleFactor;
-
-        float smallestWidth = Math.min(widthDp, heightDp);
-        Log.i("AndroidUtil", "Smallest width: " + smallestWidth);
-        return smallestWidth;
+        return DisplayUtils.getSmallestWidth(activity);
     }
 
     public static boolean isMyServiceRunning(Context c, String name) {
@@ -398,27 +283,7 @@ public final class AndroidUtil {
         context.startActivity(intent);
     }
 
-    /**
-     * Convert a pixel value to device pixels.
-     *
-     * @param context
-     * @param px
-     * @return int
-     */
-    public static int pxToDp(Context context, int px) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources()
-                .getDisplayMetrics());
-    }
 
-    public static int convertDpToPx(Context context, int dp) {
-        float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
-
-    }
-
-    public static int convertPxToDp(Context context, int px) {
-        return pxToDp(context, px);
-    }
 
 
     /*
@@ -456,6 +321,59 @@ public final class AndroidUtil {
         return false;
     }
 
+
+// ==== DEPRECATED METHODS BELOW THE LINE ===== MOSTLY MOVED TO OTHER CLASSES =========
+
+    @Deprecated
+    public static boolean isKindleFire() {
+        return DeviceUtils.isKindleFire();
+    }
+
+    @Deprecated
+    public static boolean isGoogleTV(Context context) {
+        return DeviceUtils.isGoogleTV(context);
+    }
+
+    @Deprecated
+    public static boolean isAndroidTV(Context context) {
+        return DeviceUtils.isAndroidTV(context);
+    }
+
+    @Deprecated
+    public static boolean isFireTV(Context context) {
+        return DeviceUtils.isFireTV(context);
+    }
+
+    @Deprecated
+    public static boolean isFireTVBox(Context context) {
+        return DeviceUtils.isFireTVBox(context);
+    }
+
+    @Deprecated
+    public static boolean isFireTVStick(Context context) {
+        return DeviceUtils.isFireTVStick(context);
+    }
+
+    @Deprecated
+    public static boolean isFirePhone(Context context) {
+        return DeviceUtils.isFirePhone(context);
+    }
+
+    @Deprecated
+    public static boolean isKindleTablet() {
+        return DeviceUtils.isKindleTablet();
+    }
+
+    @Deprecated
+    public static boolean isLycaTVBox(Context context) {
+        return DeviceUtils.isLycaTVBox(context);
+    }
+
+    @Deprecated
+    public static boolean isBlackberry() {
+        return DeviceUtils.isBlackberry();
+    }
+
     /**
      * Determine the size of screen for this device.
      *
@@ -463,6 +381,7 @@ public final class AndroidUtil {
      * @return double
      * @deprecated
      */
+    @Deprecated
     public static double tabletSize(Context context) {
 
         double size = 0;
@@ -478,5 +397,66 @@ public final class AndroidUtil {
 
         return size;
 
+    }
+
+    /**
+     * Convert a pixel value to device pixels.
+     *
+     * @param context
+     * @param px
+     * @return int
+     * @deprecated
+     */
+    @Deprecated
+    public static int pxToDp(Context context, int px) {
+        return DisplayUtils.pxToDp(context, px);
+    }
+
+    @Deprecated
+    public static int convertDpToPx(Context context, int dp) {
+        return DisplayUtils.convertDpToPx(context, dp);
+
+    }
+
+    @Deprecated
+    public static int convertPxToDp(Context context, int px) {
+        return DisplayUtils.convertPxToDp(context, px);
+    }
+
+    /**
+     * <p>
+     * Force an activity to be fixed in portrait orientation
+     * </p>
+     *
+     * @param activity
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @Deprecated
+    public static void forceLandscape(Activity activity) {
+        DisplayUtils.forceLandscape(activity);
+    }
+
+    /**
+     * <p>
+     * Force an activity to be fixed in landscape orientation
+     * </p>
+     *
+     * @param activity
+     */
+    @Deprecated
+    public static void forcePortrait(Activity activity) {
+        DisplayUtils.forcePortrait(activity);
+    }
+
+    /**
+     * <p>
+     * Allow activity to use sensor to determine own orientation
+     * </p>
+     *
+     * @param activity
+     */
+    @Deprecated
+    public static void forceSensor(Activity activity) {
+        DisplayUtils.forceSensor(activity);
     }
 }
