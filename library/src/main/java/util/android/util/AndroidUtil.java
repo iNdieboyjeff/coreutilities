@@ -67,13 +67,12 @@ public final class AndroidUtil {
     public static final String VERSION_NAME = "1.5";
 
 
-
     /**
      * <p>
      * Generate a suitable user agent string for the current context. App name and version will be taken from the
      * manifest.
      * </p>
-     *
+     * <p/>
      * <p>
      * User agent string will take the form:
      * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
@@ -87,6 +86,30 @@ public final class AndroidUtil {
         return generateUserAgentString(getAppName(context), getAppVersion(context), context);
     }
 
+    /**
+     * <p>
+     * Generate a suitable user agent string for the current context. App name and version will be taken from supplied
+     * arguments.
+     * </p>
+     * <p/>
+     * <p>
+     * User agent string will take the form:
+     * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
+     * {device-model}; {screen-type};)</code>
+     * </p>
+     *
+     * @param app     - app name to display
+     * @param version - app version code to display
+     * @return String - UserAgent string
+     */
+    public static final String generateUserAgentString(String app, String version, Context context) {
+        String UA = app + "/" + version + " (Linux; U; Android " + Build.VERSION.RELEASE + "; "
+                + Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry() + "; " + Build.MODEL +
+                " Build/" + Build.VERSION.INCREMENTAL
+                + "; " + DeviceUtils.getDeviceTypeID(context) + ")";
+        return UA;
+    }
+
     @SuppressLint("NewApi")
     public static boolean hasNavigationBar(Context context) {
         boolean hasNavigationBar = false;
@@ -96,37 +119,12 @@ public final class AndroidUtil {
             hasNavigationBar = false;
         }
 
-        hasNavigationBar = hasNavigationBar && !isKindleFire();
-        Log.i("AndroidUtil", "hasNavigationBar(" + hasNavigationBar + ")");
+        hasNavigationBar = hasNavigationBar && !DeviceUtils.isKindleFire();
         return hasNavigationBar;
     }
 
 
 
-    /**
-     * <p>
-     * Generate a suitable user agent string for the current context. App name and version will be taken from supplied
-     * arguments.
-     * </p>
-     *
-     * <p>
-     * User agent string will take the form:
-     * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
-     * {device-model}; {screen-type};)</code>
-     * </p>
-     *
-     * @param app
-     *            - app name to display
-     * @param version
-     *            - app version code to display
-     * @return String - UserAgent string
-     */
-    public static final String generateUserAgentString(String app, String version, Context context) {
-        String UA = app + "/" + version + " (Linux; U; Android " + Build.VERSION.RELEASE + "; "
-                + Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry() + "; " + Build.MODEL
-                + "; " + getDeviceTypeID(context) + ";)";
-        return UA;
-    }
 
     /**
      * Return the current Android SDK version number.
@@ -137,12 +135,6 @@ public final class AndroidUtil {
         return Build.VERSION.SDK_INT;
     }
 
-    public static boolean isNexusDevice() {
-        Log.i("Android Device", Build.MODEL);
-        if (Build.MODEL.toLowerCase().contains("nexus"))
-            return true;
-        return false;
-    }
 
     /**
      * Get the name of this app as specified in manifest.
@@ -181,36 +173,11 @@ public final class AndroidUtil {
         return "Unknown";
     }
 
-    /**
-     * Generate a String identifying current device as either Mobile, 7" Tablet or 10" Tablet.
-     *
-     * @param context
-     * @return String
-     */
-    public static String getDeviceTypeID(Context context) {
-        if (DeviceUtils.isGoogleTV(context) || DeviceUtils.isAndroidTV(context) || DeviceUtils.isFireTV(context)) {
-            return "TV";
-        }
-        double size = tabletSize(context);
-        if (size < 7) {
-            return "Mobile";
-        } else if (size >= 6 && size < 9) {
-            return "7\" Tablet";
-        } else if (size >= 9) {
-            return "10\" Tablet";
-        } else {
-            return "Unknown";
-        }
-    }
 
     public static String getResourceString(Context context, int string) {
         return context.getResources().getString(string);
     }
 
-    @Deprecated
-    public static float getSmallestWidth(Context activity) {
-        return DisplayUtils.getSmallestWidth(activity);
-    }
 
     public static boolean isMyServiceRunning(Context c, String name) {
         ActivityManager manager = (ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
@@ -229,24 +196,7 @@ public final class AndroidUtil {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    /**
-     * <p>
-     * Determine if this device is a tablet.
-     * </p>
-     *
-     * <p>
-     * A device is considered to be a tablet if it's screen size is larger than 9".
-     * </p>
-     *
-     * @param context
-     * @return boolean
-     * @deprecated - Use {@link #getSmallestWidth} instead
-     * @see #getSmallestWidth
-     */
-    public static boolean isTablet(Context context) {
 
-        return tabletSize(context) > 6.8;
-    }
 
     public static void openActivity(Context context, Class<?> activity) {
         openActivity(context, activity, null);
@@ -284,8 +234,6 @@ public final class AndroidUtil {
     }
 
 
-
-
     /*
      * UI & WIDGETS
      */
@@ -293,32 +241,21 @@ public final class AndroidUtil {
         tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
-    public static boolean supportsGingerbread() {
-        if (getAndroidVersion() >= ANDROID_VERSION_CODE_GINGERBREAD) {
-            return true;
-        }
-        return false;
-    }
 
     /*
      * SUPPORT & VERSION
      */
     public static boolean supportsHoneycomb() {
-        if (getAndroidVersion() >= ANDROID_VERSION_CODE_HONEYCOMB) {
-            return true;
-        }
-        return false;
+        return getAndroidVersion() >= ANDROID_VERSION_CODE_HONEYCOMB;
+    }
+
+    public static boolean supportsGingerbread() {
+        return getAndroidVersion() >= ANDROID_VERSION_CODE_GINGERBREAD;
     }
 
     public static boolean supportsLegacyVideo() {
         Log.d("Build Model", Build.MODEL);
-        if ((!AndroidUtil.supportsHoneycomb())
-            // || Build.MANUFACTURER.equalsIgnoreCase("Amazon")
-            // || Build.MODEL.equalsIgnoreCase("Kindle Fire")
-                ) {
-            return true;
-        }
-        return false;
+        return (!AndroidUtil.supportsHoneycomb());
     }
 
 
@@ -374,6 +311,30 @@ public final class AndroidUtil {
         return DeviceUtils.isBlackberry();
     }
 
+    @Deprecated
+    public static boolean isNexusDevice() {
+        return DeviceUtils.isNexusDevice();
+    }
+
+    /**
+     * <p>
+     * Determine if this device is a tablet.
+     * </p>
+     * <p/>
+     * <p>
+     * A device is considered to be a tablet if it's snallest width is 720dp or greater.
+     * </p>
+     *
+     * @param context
+     * @return boolean
+     * @see #getSmallestWidth
+     * @deprecated - Use {@link #getSmallestWidth} instead
+     */
+    @Deprecated
+    public static boolean isTablet(Context context) {
+        return DisplayUtils.getSmallestWidth(context) >= 720;
+    }
+
     /**
      * Determine the size of screen for this device.
      *
@@ -423,6 +384,11 @@ public final class AndroidUtil {
         return DisplayUtils.convertPxToDp(context, px);
     }
 
+    @Deprecated
+    public static float getSmallestWidth(Context activity) {
+        return DisplayUtils.getSmallestWidth(activity);
+    }
+
     /**
      * <p>
      * Force an activity to be fixed in portrait orientation
@@ -458,5 +424,17 @@ public final class AndroidUtil {
     @Deprecated
     public static void forceSensor(Activity activity) {
         DisplayUtils.forceSensor(activity);
+    }
+
+    /**
+     * Generate a String identifying current device as either Mobile, 7" Tablet or 10" Tablet.
+     *
+     * @param context
+     * @return String
+     * @deprecated
+     */
+    @Deprecated
+    public static String getDeviceTypeID(Context context) {
+        return DeviceUtils.getDeviceTypeID(context);
     }
 }
