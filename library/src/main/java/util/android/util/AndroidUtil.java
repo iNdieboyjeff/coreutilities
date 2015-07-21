@@ -72,7 +72,6 @@ public final class AndroidUtil {
      * Generate a suitable user agent string for the current context. App name and version will be taken from the
      * manifest.
      * </p>
-     * <p/>
      * <p>
      * User agent string will take the form:
      * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
@@ -91,7 +90,6 @@ public final class AndroidUtil {
      * Generate a suitable user agent string for the current context. App name and version will be taken from supplied
      * arguments.
      * </p>
-     * <p/>
      * <p>
      * User agent string will take the form:
      * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
@@ -320,7 +318,6 @@ public final class AndroidUtil {
      * <p>
      * Determine if this device is a tablet.
      * </p>
-     * <p/>
      * <p>
      * A device is considered to be a tablet if it's snallest width is 720dp or greater.
      * </p>
