@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.Log;
+
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 
@@ -26,11 +27,22 @@ import java.net.InetAddress;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Random;
+import java.util.TimeZone;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtils {
 
+    public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
+    public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
+    public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
+    public static final int TIME_FORMAT_MICRO = 0;
+    public static final int TIME_FORMAT_SECONDS = 1;
+    public static final int TIME_FORMAT_MINUTES = 2;
+    public static final String[] TIME_SERVER = {"2.android.pool.ntp.org", "time.nist.gov", "pool.ntp.org"};
     /**
      * The masks used to validate and parse the input to an Atom date. These are a lot more forgiving than what the Atom
      * spec allows.
@@ -42,15 +54,12 @@ public class DateUtils {
             "yyyy-MM-dd'T'HH:mm'Z'", "yyyy-MM-dd't'HH:mm'z'", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-dd", "yyyy MM dd", "yyyy-MM", "yyyy"
     };
-
     private static final String[] ordinalMasks = {
             "EEEE d MMMM yyyy HH:mm:ss", "EEEE d MMMM yyyy"
     };
-
     private static final String[] timeMasks = {
             "HH:mm:ss.SSS", "HH:mm:ss", "HH:mm"
     };
-
     static String[] suffixes = {
             // 0 1 2 3 4 5 6 7 8 9
             "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
@@ -61,15 +70,8 @@ public class DateUtils {
             // 30 31
             "th", "st"
     };
-
-    public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
-    public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
-    public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
-
-    public static final int TIME_FORMAT_MICRO = 0;
-    public static final int TIME_FORMAT_SECONDS = 1;
-    public static final int TIME_FORMAT_MINUTES = 2;
-    public static final String[] TIME_SERVER = {"2.android.pool.ntp.org", "time.nist.gov", "pool.ntp.org"};
+    static SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
+    static SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
 
     public static final String getNTPServer() {
         int min = 0;
@@ -203,11 +205,6 @@ public class DateUtils {
     }
 
     private static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
-        Date now = Calendar.getInstance().getTime();
-
-        // Different formatters for 12 and 24 hour timestamps
-        SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
 
         // According to users preferences the OS clock is displayed in 24 hour format
         if (DateFormat.is24HourFormat(context)) {
@@ -222,6 +219,7 @@ public class DateUtils {
         sdf.setTimeZone(timezone);
         return sdf.format(time);
     }
+
 
     /**
      * <p>
@@ -387,11 +385,8 @@ public class DateUtils {
         Calendar c2 = Calendar.getInstance();
         c2.setTime(date); // your date
 
-        if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)) {
-            return true;
-        }
-        return false;
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
     public static final boolean isToday(Date date) {
@@ -401,11 +396,8 @@ public class DateUtils {
         Calendar c2 = Calendar.getInstance();
         c2.setTime(date); // your date
 
-        if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)) {
-            return true;
-        }
-        return false;
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
     public static final boolean isTomorrow(Date date) {
@@ -415,11 +407,8 @@ public class DateUtils {
         Calendar c2 = Calendar.getInstance();
         c2.setTime(date); // your date
 
-        if (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)) {
-            return true;
-        }
-        return false;
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
     public static final Date getNTPTime() {
