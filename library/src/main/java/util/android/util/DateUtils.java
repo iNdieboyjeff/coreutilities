@@ -54,6 +54,30 @@ public class DateUtils {
             "yyyy-MM-dd'T'HH:mm'Z'", "yyyy-MM-dd't'HH:mm'z'", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-dd", "yyyy MM dd", "yyyy-MM", "yyyy"
     };
+
+
+    private static final SimpleDateFormat[] atomFormats = {
+            new SimpleDateFormat(atomMasks[0]),
+            new SimpleDateFormat(atomMasks[1]),
+            new SimpleDateFormat(atomMasks[2]),
+            new SimpleDateFormat(atomMasks[3]),
+            new SimpleDateFormat(atomMasks[4]),
+            new SimpleDateFormat(atomMasks[5]),
+            new SimpleDateFormat(atomMasks[6]),
+            new SimpleDateFormat(atomMasks[7]),
+            new SimpleDateFormat(atomMasks[8]),
+            new SimpleDateFormat(atomMasks[9]),
+            new SimpleDateFormat(atomMasks[10]),
+            new SimpleDateFormat(atomMasks[11]),
+            new SimpleDateFormat(atomMasks[12]),
+            new SimpleDateFormat(atomMasks[13]),
+            new SimpleDateFormat(atomMasks[14]),
+            new SimpleDateFormat(atomMasks[15]),
+            new SimpleDateFormat(atomMasks[16]),
+            new SimpleDateFormat(atomMasks[17]),
+            new SimpleDateFormat(atomMasks[18])
+    };
+
     private static final String[] ordinalMasks = {
             "EEEE d MMMM yyyy HH:mm:ss", "EEEE d MMMM yyyy"
     };
@@ -148,13 +172,11 @@ public class DateUtils {
     @SuppressLint("SimpleDateFormat")
     public static final Date parseAtomDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
         Date d = null;
-        SimpleDateFormat sdf = new SimpleDateFormat();
         for (int n = 0; n < atomMasks.length; n++) {
             try {
-                sdf.applyPattern(atomMasks[n]);
-                sdf.setTimeZone(timezone);
-                sdf.setLenient(true);
-                d = sdf.parse(dateString, new ParsePosition(0));
+                atomFormats[n].setTimeZone(timezone);
+                atomFormats[n].setLenient(true);
+                d = atomFormats[n].parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
             } catch (Exception e) {
@@ -204,7 +226,7 @@ public class DateUtils {
         return sdf.format(time);
     }
 
-    private static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
+    public static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
 
         // According to users preferences the OS clock is displayed in 24 hour format
         if (DateFormat.is24HourFormat(context)) {
