@@ -36,6 +36,10 @@ import java.util.TimeZone;
 @SuppressLint("SimpleDateFormat")
 public class DateUtils {
 
+    public static final long MILLIS_PER_SECOND = 1000;
+    public static final long MILLIS_PER_MINUTE = 60 * MILLIS_PER_SECOND;
+    public static final long MILLIS_PER_HOUR = 60 * MILLIS_PER_MINUTE;
+    public static final long MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR;
     public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
     public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
     public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
@@ -199,7 +203,7 @@ public class DateUtils {
         return parseAtomDate(dateString, TZ_LONDON);
     }
 
-    @SuppressLint("SimpleDateFormat")
+
     public static final Date parseTime(String dateString) throws IllegalArgumentException {
         Date d = null;
         for (int n = 0; n < timeMasks.length; n++) {
@@ -217,7 +221,6 @@ public class DateUtils {
         return d;
     }
 
-    @SuppressLint("SimpleDateFormat")
     public static final String formatTime(Date time, int format, TimeZone timezone) {
         timeFormats[format].setTimeZone(timezone);
         return timeFormats[format].format(time);
@@ -479,4 +482,23 @@ public class DateUtils {
         return c.getTime();
     }
 
+    public static boolean isSameDay(final Date date1, final Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return isSameDay(cal1, cal2);
+    }
+
+    public static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
 }

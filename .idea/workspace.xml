@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f81730c9-e561-4c47-8502-97abe99f02a5" name="Default" comment="Use cached SimpleDateFormat">
+    <list default="true" id="f81730c9-e561-4c47-8502-97abe99f02a5" name="Default" comment="More static SDF conversions">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/src/main/java/util/android/util/DateUtils.java" afterPath="$PROJECT_DIR$/library/src/main/java/util/android/util/DateUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CoreUtilities.iws" />
@@ -108,15 +107,18 @@
       <file leaf-file-name="DateUtils.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/library/src/main/java/util/android/util/DateUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4538402">
-              <caret line="69" column="48" selection-start-line="69" selection-start-column="48" selection-end-line="69" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.2901474">
+              <caret line="201" column="63" selection-start-line="201" selection-start-column="63" selection-end-line="201" selection-end-column="63" />
               <folding>
-                <element signature="e#5067#5068#0" expanded="true" />
-                <element signature="e#5117#5118#0" expanded="true" />
-                <element signature="e#7283#7284#0" expanded="true" />
-                <element signature="e#7342#7343#0" expanded="true" />
-                <element signature="e#8266#8267#0" expanded="true" />
-                <element signature="e#8321#8322#0" expanded="true" />
+                <element signature="e#5335#5336#0" expanded="true" />
+                <element signature="e#5385#5386#0" expanded="true" />
+                <element signature="e#5720#5721#0" expanded="true" />
+                <element signature="e#5763#5764#0" expanded="true" />
+                <element signature="e#7610#7611#0" expanded="true" />
+                <element signature="e#8458#8459#0" expanded="true" />
+                <element signature="e#8513#8514#0" expanded="true" />
+                <element signature="e#10972#10973#0" expanded="true" />
+                <element signature="e#11045#11046#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2007,7 +2009,13 @@
       <option name="project" value="LOCAL" />
       <updated>1437663673727</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="More static SDF conversions">
+      <created>1437723259821</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1437723259821</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2070,7 +2078,8 @@
     <MESSAGE value="Include gradle instructions" />
     <MESSAGE value="Make user time formats static" />
     <MESSAGE value="Use cached SimpleDateFormat" />
-    <option name="LAST_COMMIT_MESSAGE" value="Use cached SimpleDateFormat" />
+    <MESSAGE value="More static SDF conversions" />
+    <option name="LAST_COMMIT_MESSAGE" value="More static SDF conversions" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -2085,12 +2094,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="192" column="52" selection-start-line="192" selection-start-column="52" selection-end-line="192" selection-end-column="52" />
           <folding>
-            <element signature="e#5067#5068#0" expanded="true" />
-            <element signature="e#5117#5118#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#8266#8267#0" expanded="true" />
-            <element signature="e#8321#8322#0" expanded="true" />
+            <element signature="e#5335#5336#0" expanded="true" />
+            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#7610#7611#0" expanded="true" />
+            <element signature="e#8458#8459#0" expanded="true" />
+            <element signature="e#8513#8514#0" expanded="true" />
+            <element signature="e#10972#10973#0" expanded="true" />
+            <element signature="e#11045#11046#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2116,12 +2128,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="286" column="31" selection-start-line="286" selection-start-column="31" selection-end-line="286" selection-end-column="31" />
           <folding>
-            <element signature="e#5067#5068#0" expanded="true" />
-            <element signature="e#5117#5118#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#8266#8267#0" expanded="true" />
-            <element signature="e#8321#8322#0" expanded="true" />
+            <element signature="e#5335#5336#0" expanded="true" />
+            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#7610#7611#0" expanded="true" />
+            <element signature="e#8458#8459#0" expanded="true" />
+            <element signature="e#8513#8514#0" expanded="true" />
+            <element signature="e#10972#10973#0" expanded="true" />
+            <element signature="e#11045#11046#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2147,12 +2162,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="201" column="38" selection-start-line="201" selection-start-column="38" selection-end-line="201" selection-end-column="38" />
           <folding>
-            <element signature="e#5067#5068#0" expanded="true" />
-            <element signature="e#5117#5118#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#8266#8267#0" expanded="true" />
-            <element signature="e#8321#8322#0" expanded="true" />
+            <element signature="e#5335#5336#0" expanded="true" />
+            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#7610#7611#0" expanded="true" />
+            <element signature="e#8458#8459#0" expanded="true" />
+            <element signature="e#8513#8514#0" expanded="true" />
+            <element signature="e#10972#10973#0" expanded="true" />
+            <element signature="e#11045#11046#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2178,12 +2196,15 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="225" column="47" selection-start-line="225" selection-start-column="47" selection-end-line="225" selection-end-column="47" />
           <folding>
-            <element signature="e#5067#5068#0" expanded="true" />
-            <element signature="e#5117#5118#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#8266#8267#0" expanded="true" />
-            <element signature="e#8321#8322#0" expanded="true" />
+            <element signature="e#5335#5336#0" expanded="true" />
+            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#7610#7611#0" expanded="true" />
+            <element signature="e#8458#8459#0" expanded="true" />
+            <element signature="e#8513#8514#0" expanded="true" />
+            <element signature="e#10972#10973#0" expanded="true" />
+            <element signature="e#11045#11046#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2482,15 +2503,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/library/src/main/java/util/android/util/DateUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4538402">
-          <caret line="69" column="48" selection-start-line="69" selection-start-column="48" selection-end-line="69" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.2901474">
+          <caret line="201" column="63" selection-start-line="201" selection-start-column="63" selection-end-line="201" selection-end-column="63" />
           <folding>
-            <element signature="e#5067#5068#0" expanded="true" />
-            <element signature="e#5117#5118#0" expanded="true" />
-            <element signature="e#7283#7284#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#8266#8267#0" expanded="true" />
-            <element signature="e#8321#8322#0" expanded="true" />
+            <element signature="e#5335#5336#0" expanded="true" />
+            <element signature="e#5385#5386#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#7610#7611#0" expanded="true" />
+            <element signature="e#8458#8459#0" expanded="true" />
+            <element signature="e#8513#8514#0" expanded="true" />
+            <element signature="e#10972#10973#0" expanded="true" />
+            <element signature="e#11045#11046#0" expanded="true" />
           </folding>
         </state>
       </provider>
