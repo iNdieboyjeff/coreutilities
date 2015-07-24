@@ -84,6 +84,10 @@ public class DateUtils {
     private static final String[] timeMasks = {
             "HH:mm:ss.SSS", "HH:mm:ss", "HH:mm"
     };
+
+    private static final SimpleDateFormat[] timeFormats = {new SimpleDateFormat(timeMasks[0]),
+            new SimpleDateFormat(timeMasks[1]), new SimpleDateFormat(timeMasks[2])};
+
     static String[] suffixes = {
             // 0 1 2 3 4 5 6 7 8 9
             "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
@@ -96,6 +100,10 @@ public class DateUtils {
     };
     static SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
     static SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
+
+    static SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
+
+    static SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 
     public static final String getNTPServer() {
         int min = 0;
@@ -117,9 +125,7 @@ public class DateUtils {
      */
     @SuppressLint("SimpleDateFormat")
     public static String getDateAsString(Date inDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern("yyyy-MM-dd");
-        return sdf.format(inDate);
+        return dateAsString.format(inDate);
     }
 
     /**
@@ -196,12 +202,11 @@ public class DateUtils {
     @SuppressLint("SimpleDateFormat")
     public static final Date parseTime(String dateString) throws IllegalArgumentException {
         Date d = null;
-        SimpleDateFormat sdf = new SimpleDateFormat();
         for (int n = 0; n < timeMasks.length; n++) {
             try {
-                sdf.applyPattern(timeMasks[n]);
-                sdf.setLenient(true);
-                d = sdf.parse(dateString, new ParsePosition(0));
+                timeFormats[n].applyPattern(timeMasks[n]);
+                timeFormats[n].setLenient(true);
+                d = timeFormats[n].parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
             } catch (Exception e) {
@@ -214,16 +219,12 @@ public class DateUtils {
 
     @SuppressLint("SimpleDateFormat")
     public static final String formatTime(Date time, int format, TimeZone timezone) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern(timeMasks[format]);
-        sdf.setTimeZone(timezone);
-        return sdf.format(time);
+        timeFormats[format].setTimeZone(timezone);
+        return timeFormats[format].format(time);
     }
 
     public static final String formatTime(Date time, int format) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern(timeMasks[format]);
-        return sdf.format(time);
+        return timeFormats[format].format(time);
     }
 
     public static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
@@ -268,10 +269,8 @@ public class DateUtils {
     }
 
     public static Date getTwitterDate(String date) throws ParseException {
-        final String TWITTER = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(TWITTER);
-        sf.setLenient(true);
-        return sf.parse(date);
+        twiterFormat.setLenient(true);
+        return twiterFormat.parse(date);
     }
 
     /**
