@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2013-2015 Jeff Sutton.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package util.android.crypt;
+
+import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.NoSuchAlgorithmException;
 
 public class MCrypt {
 
@@ -130,41 +148,41 @@ public class MCrypt {
 
 /**
  * <?php
- * <p/>
+ * <p>
  * class MCrypt {
- * <p/>
+ * <p>
  * private $iv = 'fedcba9876543210'; #Same as in JAVA private $key = '0123456789abcdef'; #Same as in JAVA
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * function __construct() { }
- * <p/>
+ * <p>
  * function encrypt($str) {
- * <p/>
+ * <p>
  * //$key = $this->hex2bin($key); $iv = $this-&gt;iv;
- * <p/>
+ * <p>
  * $td = mcrypt_module_open('rijndael-128', '', 'cbc', $iv);
- * <p/>
+ * <p>
  * mcrypt_generic_init($td, $this-&gt;key, $iv); $encrypted = mcrypt_generic($td, $str);
- * <p/>
+ * <p>
  * mcrypt_generic_deinit($td); mcrypt_module_close($td);
- * <p/>
+ * <p>
  * return bin2hex($encrypted); }
- * <p/>
+ * <p>
  * function decrypt($code) { //$key = $this-&gt;hex2bin($key); $code = $this-&gt;hex2bin($code); $iv = $this-&gt;iv;
- * <p/>
+ * <p>
  * $td = mcrypt_module_open('rijndael-128', '', 'cbc', $iv);
- * <p/>
+ * <p>
  * mcrypt_generic_init($td, $this-&gt;key, $iv); $decrypted = mdecrypt_generic($td, $code);
- * <p/>
+ * <p>
  * mcrypt_generic_deinit($td); mcrypt_module_close($td);
- * <p/>
+ * <p>
  * return utf8_encode(trim($decrypted)); }
- * <p/>
+ * <p>
  * protected function hex2bin($hexdata) { $bindata = '';
- * <p/>
+ * <p>
  * for ($i = 0; $i < strlen($hexdata); $i += 2) { $bindata .= chr(hexdec(substr($hexdata, $i, 2))); }
- * <p/>
+ * <p>
  * return $bindata; }
- * <p/>
+ * <p>
  * } // see http://androidsnippets.com/encrypt-decrypt-between-android-and-php
  */

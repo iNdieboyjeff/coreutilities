@@ -1,17 +1,18 @@
-/**
- * Copyright � 2013 Jeff Sutton.
- * <p/>
+/*
+ * Copyright (c) 2013-2015 Jeff Sutton.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package util.android.util;
@@ -68,15 +69,13 @@ public final class AndroidUtil {
 
 
     /**
-     * <p>
-     * Generate a suitable user agent string for the current context. App name and version will be taken from the
-     * manifest.
-     * </p>
-     * <p>
+     * Generate a suitable user agent string for the current context. App name and version will be
+     * taken from the manifest.
+     * <p />
      * User agent string will take the form:
      * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
      * {device-model}; {screen-type};)</code>
-     * </p>
+     * <p/>
      *
      * @param context
      * @return String
@@ -120,8 +119,6 @@ public final class AndroidUtil {
         hasNavigationBar = hasNavigationBar && !DeviceUtils.isKindleFire();
         return hasNavigationBar;
     }
-
-
 
 
     /**
@@ -193,7 +190,6 @@ public final class AndroidUtil {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
 
     public static void openActivity(Context context, Class<?> activity) {
