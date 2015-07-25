@@ -38,6 +38,10 @@ import java.util.TimeZone;
 @SuppressLint("SimpleDateFormat")
 public class DateUtils {
 
+    public static final long MILLIS_PER_SECOND = 1000;
+    public static final long MILLIS_PER_MINUTE = 60 * MILLIS_PER_SECOND;
+    public static final long MILLIS_PER_HOUR = 60 * MILLIS_PER_MINUTE;
+    public static final long MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR;
     public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
     public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
     public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
@@ -86,6 +90,10 @@ public class DateUtils {
     private static final String[] timeMasks = {
             "HH:mm:ss.SSS", "HH:mm:ss", "HH:mm"
     };
+
+    private static final SimpleDateFormat[] timeFormats = {new SimpleDateFormat(timeMasks[0]),
+            new SimpleDateFormat(timeMasks[1]), new SimpleDateFormat(timeMasks[2])};
+
     static String[] suffixes = {
             // 0 1 2 3 4 5 6 7 8 9
             "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
@@ -98,6 +106,10 @@ public class DateUtils {
     };
     static SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
     static SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
+
+    static SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
+
+    static SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 
     public static final String getNTPServer() {
         int min = 0;
@@ -119,9 +131,7 @@ public class DateUtils {
      */
     @SuppressLint("SimpleDateFormat")
     public static String getDateAsString(Date inDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern("yyyy-MM-dd");
-        return sdf.format(inDate);
+        return dateAsString.format(inDate);
     }
 
     /**
@@ -195,15 +205,14 @@ public class DateUtils {
         return parseAtomDate(dateString, TZ_LONDON);
     }
 
-    @SuppressLint("SimpleDateFormat")
+
     public static final Date parseTime(String dateString) throws IllegalArgumentException {
         Date d = null;
-        SimpleDateFormat sdf = new SimpleDateFormat();
         for (int n = 0; n < timeMasks.length; n++) {
             try {
-                sdf.applyPattern(timeMasks[n]);
-                sdf.setLenient(true);
-                d = sdf.parse(dateString, new ParsePosition(0));
+                timeFormats[n].applyPattern(timeMasks[n]);
+                timeFormats[n].setLenient(true);
+                d = timeFormats[n].parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
             } catch (Exception e) {
@@ -214,18 +223,13 @@ public class DateUtils {
         return d;
     }
 
-    @SuppressLint("SimpleDateFormat")
     public static final String formatTime(Date time, int format, TimeZone timezone) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern(timeMasks[format]);
-        sdf.setTimeZone(timezone);
-        return sdf.format(time);
+        timeFormats[format].setTimeZone(timezone);
+        return timeFormats[format].format(time);
     }
 
     public static final String formatTime(Date time, int format) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.applyPattern(timeMasks[format]);
-        return sdf.format(time);
+        return timeFormats[format].format(time);
     }
 
     public static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
@@ -270,10 +274,8 @@ public class DateUtils {
     }
 
     public static Date getTwitterDate(String date) throws ParseException {
-        final String TWITTER = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(TWITTER);
-        sf.setLenient(true);
-        return sf.parse(date);
+        twiterFormat.setLenient(true);
+        return twiterFormat.parse(date);
     }
 
     /**
@@ -482,4 +484,23 @@ public class DateUtils {
         return c.getTime();
     }
 
+    public static boolean isSameDay(final Date date1, final Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return isSameDay(cal1, cal2);
+    }
+
+    public static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
 }
