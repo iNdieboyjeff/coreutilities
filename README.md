@@ -1,4 +1,6 @@
-*coreutilities*
+#Core Utilities
+
+A collection of core classes and functions for Android development.
 
 #### Get CoreUtilities
 
