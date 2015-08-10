@@ -71,11 +71,9 @@ public final class AndroidUtil {
     /**
      * Generate a suitable user agent string for the current context. App name and version will be
      * taken from the manifest.
-     * <p />
      * User agent string will take the form:
      * <code>{app-name}/{version} (Linux; U; Android {version}; {locale};
      * {device-model}; {screen-type};)</code>
-     * <p/>
      *
      * @param context
      * @return String
