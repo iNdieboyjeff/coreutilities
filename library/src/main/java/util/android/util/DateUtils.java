@@ -348,6 +348,27 @@ public class DateUtils {
         return tomorrow;
     }
 
+    public static final int getAge(Date dateOfBirth) {
+        GregorianCalendar cal = new GregorianCalendar();
+        int y, m, d, a;
+
+        y = cal.get(Calendar.YEAR);
+        m = cal.get(Calendar.MONTH);
+        d = cal.get(Calendar.DAY_OF_MONTH);
+
+        cal.setTime(dateOfBirth);
+
+        a = y - cal.get(Calendar.YEAR);
+        if ((m < cal.get(Calendar.MONTH))
+                || ((m == cal.get(Calendar.MONTH)) && (d < cal
+                .get(Calendar.DAY_OF_MONTH)))) {
+            --a;
+        }
+        if (a < 0)
+            throw new IllegalArgumentException("Age < 0");
+        return a;
+    }
+
     public static final Date getToday() {
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
