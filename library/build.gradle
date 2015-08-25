@@ -45,6 +45,7 @@ android {
             transitive true
         }
         compile 'com.android.support:recyclerview-v7:22.2.1'
+        compile 'com.google.code.gson:gson:2.3.1'
     }
 }
 
