@@ -21,7 +21,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android'
-    version = '1.5.6'
+    version = '1.6.0'
 }
 
 android {
@@ -41,7 +41,9 @@ android {
 
     dependencies {
         compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile 'commons-net:commons-net:3.3'
+        compile('commons-net:commons-net:3.3') {
+            transitive true
+        }
         compile 'com.android.support:recyclerview-v7:22.2.1'
     }
 }
@@ -100,19 +102,8 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    title = 'Core Utitlities ' + version
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
 
 artifacts {
-    archives javadocJar
     archives sourcesJar
 }
 
