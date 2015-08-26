@@ -29,6 +29,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TypeAdapter for Gson that gan handle variable array/objects. For instance where a
+ * single item is an object, but multiple items are an array.  This will place the single
+ * item into an array.
+ * <p/>
+ * It's also handy with Retrofit to allow gson to handle a response that is simply a json array
+ * without any key.
+ *
+ * @param <T>
+ */
 public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
     private Class<T> adapterclass;
 
