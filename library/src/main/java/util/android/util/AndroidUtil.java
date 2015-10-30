@@ -167,8 +167,15 @@ public final class AndroidUtil {
     }
 
 
+    /**
+     *
+     * @param context
+     * @param string
+     * @return
+     * @deprecated use {@link StringUtils#getResourceString(Context, int)}
+     */
     public static String getResourceString(Context context, int string) {
-        return context.getResources().getString(string);
+        return StringUtils.getResourceString(context, string);
     }
 
 
