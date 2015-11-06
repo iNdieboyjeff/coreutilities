@@ -22,6 +22,11 @@ import android.database.Cursor;
 import java.util.HashMap;
 
 /**
+ * <p>With a SQLite Cursor, getColumnIndex() is an expensive operation.  It is a lot faster
+ * to cache the results of this lookup in a HashMap for faster access.</p>
+ *
+ * @see <a href="https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2">https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2</a>
+ *
  * Created by jeffsutton on 10/08/15.
  */
 public class ColumnIndexCache {

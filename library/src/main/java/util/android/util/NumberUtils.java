@@ -22,7 +22,12 @@ package util.android.util;
  */
 public class NumberUtils {
 
-
+    /**
+     * <p>Convert a fractional odds string to a decimal odds value.</p>
+     *
+     * @param odds Fractional odds string (e.g. "5/3", "6/1")
+     * @return odds as a decimal
+     */
     public static double getDecimalPrice(String odds) {
         if (odds.contains("/")) {
             String[] rat = odds.split("/");
