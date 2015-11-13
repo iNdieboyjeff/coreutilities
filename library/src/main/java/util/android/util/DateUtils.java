@@ -42,12 +42,21 @@ public class DateUtils {
     public static final long MILLIS_PER_MINUTE = 60 * MILLIS_PER_SECOND;
     public static final long MILLIS_PER_HOUR = 60 * MILLIS_PER_MINUTE;
     public static final long MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR;
+
     public static final TimeZone TZ_LONDON = TimeZone.getTimeZone("Europe/London");
+    public static final TimeZone TZ_LISBON = TimeZone.getTimeZone("Europe/Lisbon");
+    public static final TimeZone TZ_MADRID = TimeZone.getTimeZone("Europe/Madrid");
+    public static final TimeZone TZ_PARIS = TimeZone.getTimeZone("Europe/Paris");
+    public static final TimeZone TZ_ROME = TimeZone.getTimeZone("Europe/Rome");
+    public static final TimeZone TZ_MOSCOW = TimeZone.getTimeZone("Europe/Moscow");
     public static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
     public static final TimeZone TZ_GMT = TimeZone.getTimeZone("GMT");
+    public static final TimeZone TZ_BST = TimeZone.getTimeZone("BST");
+
     public static final int TIME_FORMAT_MICRO = 0;
     public static final int TIME_FORMAT_SECONDS = 1;
     public static final int TIME_FORMAT_MINUTES = 2;
+
     public static final String[] TIME_SERVER = {"2.android.pool.ntp.org", "time.nist.gov", "pool.ntp.org"};
     /**
      * The masks used to validate and parse the input to an Atom date. These are a lot more forgiving than what the Atom
@@ -125,7 +134,7 @@ public class DateUtils {
      * Parse the supplied date and return an ISO/SQL compatible date string in the format <i>yyyy-mm-dd</i>.
      * </p>
      *
-     * @param inDate
+     * @param inDate the Date object you want to format
      * @return String
      */
     @SuppressLint("SimpleDateFormat")
@@ -140,7 +149,7 @@ public class DateUtils {
      * <p>
      * <i>e.g.</i> 1st, 2nd, 3rd, 4th...
      *
-     * @param dayOfMonth
+     * @param dayOfMonth int of the day of the month (1 = 1st, 2 = 2nd)
      * @return String suffix (st, rd, th, nd)
      */
     public static String getDaySuffix(int dayOfMonth) {

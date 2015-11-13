@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
-import java.util.Calendar;
 import java.util.Locale;
 
 /**

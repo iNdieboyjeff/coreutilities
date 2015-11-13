@@ -98,11 +98,10 @@ public final class AndroidUtil {
      * @return String - UserAgent string
      */
     public static String generateUserAgentString(String app, String version, Context context) {
-        String UA = app + "/" + version + " (Linux; U; Android " + Build.VERSION.RELEASE + "; "
+        return app + "/" + version + " (Linux; U; Android " + Build.VERSION.RELEASE + "; "
                 + Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry() + "; " + Build.MODEL +
                 " Build/" + Build.VERSION.INCREMENTAL
                 + "; " + DeviceUtils.getDeviceTypeID(context) + ")";
-        return UA;
     }
 
     @SuppressLint("NewApi")
@@ -133,8 +132,7 @@ public final class AndroidUtil {
     public static String getAppName(Context context) {
         try {
             PackageManager packageManager = context.getPackageManager();
-            String appname = packageManager.getApplicationLabel(context.getApplicationInfo()).toString();
-            return appname;
+            return packageManager.getApplicationLabel(context.getApplicationInfo()).toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
