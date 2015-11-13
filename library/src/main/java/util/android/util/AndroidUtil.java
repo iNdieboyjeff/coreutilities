@@ -78,7 +78,7 @@ public final class AndroidUtil {
      * @param context
      * @return String
      */
-    public static final String generateUserAgentString(Context context) {
+    public static String generateUserAgentString(Context context) {
         return generateUserAgentString(getAppName(context), getAppVersion(context), context);
     }
 
@@ -97,7 +97,7 @@ public final class AndroidUtil {
      * @param version - app version code to display
      * @return String - UserAgent string
      */
-    public static final String generateUserAgentString(String app, String version, Context context) {
+    public static String generateUserAgentString(String app, String version, Context context) {
         String UA = app + "/" + version + " (Linux; U; Android " + Build.VERSION.RELEASE + "; "
                 + Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getCountry() + "; " + Build.MODEL +
                 " Build/" + Build.VERSION.INCREMENTAL
@@ -107,13 +107,8 @@ public final class AndroidUtil {
 
     @SuppressLint("NewApi")
     public static boolean hasNavigationBar(Context context) {
-        boolean hasNavigationBar = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            hasNavigationBar = !ViewConfiguration.get(context).hasPermanentMenuKey();
-        } else {
-            hasNavigationBar = false;
-        }
-
+        boolean hasNavigationBar;
+        hasNavigationBar = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !ViewConfiguration.get(context).hasPermanentMenuKey();
         hasNavigationBar = hasNavigationBar && !DeviceUtils.isKindleFire();
         return hasNavigationBar;
     }
@@ -158,9 +153,8 @@ public final class AndroidUtil {
             String version = packageManager.getPackageInfo(context.getPackageName(), 0).versionName;
             if (version == null)
                 version = Integer.toString(packageManager.getPackageInfo(context.getPackageName(), 0).versionCode);
-            if (version != null)
-                return version;
-        } catch (Exception e) {
+            return version;
+        } catch (Exception ignored) {
 
         }
         return "Unknown";
@@ -349,8 +343,9 @@ public final class AndroidUtil {
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
             float screenWidth = dm.widthPixels / dm.xdpi;
             float screenHeight = dm.heightPixels / dm.ydpi;
+            //noinspection SuspiciousNameCombination
             size = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
-        } catch (Throwable t) {
+        } catch (Throwable ignored) {
 
         }
 

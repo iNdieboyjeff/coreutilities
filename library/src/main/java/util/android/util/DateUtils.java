@@ -94,7 +94,7 @@ public class DateUtils {
     private static final SimpleDateFormat[] timeFormats = {new SimpleDateFormat(timeMasks[0]),
             new SimpleDateFormat(timeMasks[1]), new SimpleDateFormat(timeMasks[2])};
 
-    static String[] suffixes = {
+    static final String[] suffixes = {
             // 0 1 2 3 4 5 6 7 8 9
             "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
             // 10 11 12 13 14 15 16 17 18 19
@@ -104,15 +104,14 @@ public class DateUtils {
             // 30 31
             "th", "st"
     };
-    static SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
-    static SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
+    static final SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
+    static final SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
 
-    static SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
+    static final SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
 
-    static SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
+    static final SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
 
-    public static final String getNTPServer() {
-        int min = 0;
+    public static String getNTPServer() {
         int max = TIME_SERVER.length;
 
         Random r = new Random();
@@ -155,19 +154,19 @@ public class DateUtils {
      * @return String
      */
     @SuppressLint("SimpleDateFormat")
-    public static final String formatAtomDate(Date inDate) {
+    public static String formatAtomDate(Date inDate) {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern(atomMasks[0]);
         return sdf.format(inDate);
     }
 
-    public static final String formatLongDate(Date inDate) {
+    public static String formatLongDate(Date inDate) {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern(ordinalMasks[1]);
         return sdf.format(inDate);
     }
 
-    public static final String formatDateName(Date inDate) {
+    public static String formatDateName(Date inDate) {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.applyPattern("EEEE");
         return sdf.format(inDate);
@@ -182,7 +181,7 @@ public class DateUtils {
      * @throws IllegalArgumentException
      */
     @SuppressLint("SimpleDateFormat")
-    public static final Date parseAtomDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
+    public static Date parseAtomDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
         Date d = null;
         for (int n = 0; n < atomMasks.length; n++) {
             try {
@@ -191,7 +190,7 @@ public class DateUtils {
                 d = atomFormats[n].parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         if (d == null) {
@@ -201,12 +200,12 @@ public class DateUtils {
         return d;
     }
 
-    public static final Date parseAtomDate(String dateString) {
+    public static Date parseAtomDate(String dateString) {
         return parseAtomDate(dateString, TZ_LONDON);
     }
 
 
-    public static final Date parseTime(String dateString) throws IllegalArgumentException {
+    public static Date parseTime(String dateString) throws IllegalArgumentException {
         Date d = null;
         for (int n = 0; n < timeMasks.length; n++) {
             try {
@@ -215,7 +214,7 @@ public class DateUtils {
                 d = timeFormats[n].parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         if (d == null)
@@ -223,12 +222,12 @@ public class DateUtils {
         return d;
     }
 
-    public static final String formatTime(Date time, int format, TimeZone timezone) {
+    public static String formatTime(Date time, int format, TimeZone timezone) {
         timeFormats[format].setTimeZone(timezone);
         return timeFormats[format].format(time);
     }
 
-    public static final String formatTime(Date time, int format) {
+    public static String formatTime(Date time, int format) {
         return timeFormats[format].format(time);
     }
 
@@ -242,7 +241,7 @@ public class DateUtils {
         return formatter12;
     }
 
-    public static final String formatUserPrefTime(Context context, Date time, TimeZone timezone) {
+    public static String formatUserPrefTime(Context context, Date time, TimeZone timezone) {
         SimpleDateFormat sdf = getLocalizedHHMMStamp(context);
         sdf.setTimeZone(timezone);
         return sdf.format(time);
@@ -269,7 +268,7 @@ public class DateUtils {
      * @param dateString
      * @return Date
      */
-    public static final Date parseOrdinalDate(String dateString) throws IllegalArgumentException {
+    public static Date parseOrdinalDate(String dateString) throws IllegalArgumentException {
         return parseOrdinalDate(dateString, TZ_LONDON);
     }
 
@@ -290,19 +289,19 @@ public class DateUtils {
      * @return Date
      */
     @SuppressLint("SimpleDateFormat")
-    public static final Date parseOrdinalDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
+    public static Date parseOrdinalDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
         dateString = dateString.trim().replaceAll("([0-9]+)(?:st|nd|rd|th)?", "$1").replace("  ", " ");
         Date d = null;
         SimpleDateFormat sdf = new SimpleDateFormat();
-        for (int n = 0; n < ordinalMasks.length; n++) {
+        for (String ordinalMask : ordinalMasks) {
             try {
-                sdf.applyPattern(ordinalMasks[n]);
+                sdf.applyPattern(ordinalMask);
                 sdf.setTimeZone(timezone);
                 sdf.setLenient(true);
                 d = sdf.parse(dateString, new ParsePosition(0));
                 if (d != null)
                     break;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         if (d == null)
@@ -310,11 +309,11 @@ public class DateUtils {
         return d;
     }
 
-    public static final String getDurationString(Date start, Date end) {
+    public static String getDurationString(Date start, Date end) {
         return getDurationString(end.getTime() - start.getTime());
     }
 
-    public static final String getDurationString(long duration) {
+    public static String getDurationString(long duration) {
         duration = duration / 1000;
         int hour = (int) (duration / 3600);
         int min = (int) ((duration - hour * 3600) / 60);
@@ -334,21 +333,20 @@ public class DateUtils {
         return builder.toString();
     }
 
-    public static final Date getTomorrow() {
+    public static Date getTomorrow() {
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         cal.add(Calendar.DAY_OF_YEAR, 1); // <--
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date tomorrow = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-        return tomorrow;
+        return cal.getTime();
     }
 
-    public static final int getAge(Date dateOfBirth) {
+    public static int getAge(Date dateOfBirth) {
         GregorianCalendar cal = new GregorianCalendar();
         int y, m, d, a;
 
@@ -369,63 +367,58 @@ public class DateUtils {
         return a;
     }
 
-    public static final Date getToday() {
+    public static Date getToday() {
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         cal.add(Calendar.DAY_OF_YEAR, 0); // <--
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date tomorrow = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-        return tomorrow;
+        return cal.getTime();
     }
 
-    public static final Date getTodayPlus(int d) {
+    public static Date getTodayPlus(int d) {
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         cal.add(Calendar.DAY_OF_YEAR, d); // <--
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date tomorrow = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-        return tomorrow;
+        return cal.getTime();
     }
 
-    public static final Date getDatePlus(Date d, int days) {
-        Date now = d;
+    public static Date getDatePlus(Date d, int days) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
+        cal.setTime(d);
         cal.add(Calendar.DAY_OF_YEAR, days); // <--
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date tomorrow = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-        return tomorrow;
+        return cal.getTime();
     }
 
-    public static final Date getDate(String d) {
+    public static Date getDate(String d) {
         Date now = util.android.util.DateUtils.parseAtomDate(d);
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         cal.add(Calendar.DAY_OF_YEAR, 0); // <--
-        cal.set(Calendar.HOUR_OF_DAY, 00);
-        cal.set(Calendar.MINUTE, 00);
-        cal.set(Calendar.SECOND, 00);
-        cal.set(Calendar.MILLISECOND, 00);
-        Date tomorrow = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
-        return tomorrow;
+        return cal.getTime();
     }
 
-    public static final boolean isYesterday(Date date) {
+    public static boolean isYesterday(Date date) {
         Calendar c1 = Calendar.getInstance(); // today
         c1.add(Calendar.DAY_OF_YEAR, -1); // yesterday
 
@@ -436,7 +429,7 @@ public class DateUtils {
                 && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static final boolean isToday(Date date) {
+    public static boolean isToday(Date date) {
         Calendar c1 = Calendar.getInstance(); // today
         c1.add(Calendar.DAY_OF_YEAR, 0); // yesterday
 
@@ -447,7 +440,7 @@ public class DateUtils {
                 && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static final boolean isTomorrow(Date date) {
+    public static boolean isTomorrow(Date date) {
         Calendar c1 = Calendar.getInstance(); // today
         c1.add(Calendar.DAY_OF_YEAR, 1); // yesterday
 
@@ -458,7 +451,7 @@ public class DateUtils {
                 && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static final Date getNTPTime() {
+    public static Date getNTPTime() {
         NTPUDPClient timeClient = new NTPUDPClient();
         timeClient.setDefaultTimeout(2000);
 
