@@ -210,7 +210,7 @@ public class DateUtils {
     }
 
     public static Date parseAtomDate(String dateString) {
-        return parseAtomDate(dateString, TZ_LONDON);
+        return parseAtomDate(dateString, TZ_UTC);
     }
 
 
