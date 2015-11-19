@@ -24,11 +24,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * A simple implementation of PHPs MCrypt function
+ *
+ * @see {http://www.androidsnippets.com/encrypt-decrypt-between-android-and-php.html}
+ */
 public class MCrypt {
 
     private String iv = "fedcba9876543210";// Dummy iv (CHANGE IT!)
-    private IvParameterSpec ivspec;
-    private SecretKeySpec keyspec;
+    private final IvParameterSpec ivspec;
+    private final SecretKeySpec keyspec;
     private Cipher cipher;
 
     private String SecretKey = "0123456789abcdef";// Dummy secretKey (CHANGE IT!)
@@ -40,10 +45,7 @@ public class MCrypt {
 
         try {
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -59,10 +61,7 @@ public class MCrypt {
 
         try {
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -72,7 +71,7 @@ public class MCrypt {
         if (text == null || text.length() == 0)
             throw new Exception("Empty string");
 
-        byte[] encrypted = null;
+        byte[] encrypted;
 
         try {
             cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
@@ -89,7 +88,7 @@ public class MCrypt {
         if (code == null || code.length() == 0)
             throw new Exception("Empty string");
 
-        byte[] decrypted = null;
+        byte[] decrypted;
 
         try {
             cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
@@ -106,13 +105,12 @@ public class MCrypt {
             return null;
         }
 
-        int len = data.length;
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < len; i++) {
-            if ((data[i] & 0xFF) < 16)
-                str.append("0" + Integer.toHexString(data[i] & 0xFF));
+        for (byte aData : data) {
+            if ((aData & 0xFF) < 16)
+                str.append("0").append(Integer.toHexString(aData & 0xFF));
             else
-                str.append(Integer.toHexString(data[i] & 0xFF));
+                str.append(Integer.toHexString(aData & 0xFF));
         }
         return str.toString();
     }

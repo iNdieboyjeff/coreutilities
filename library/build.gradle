@@ -12,6 +12,8 @@ allprojects {
     version = '1.6.5'
 }
 
+
+
 android {
     compileSdkVersion 23
     buildToolsVersion "21.1.2"
@@ -34,6 +36,7 @@ android {
         compile 'com.android.support:recyclerview-v7:23.1.1'
         compile 'com.google.code.gson:gson:2.4'
         compile 'com.squareup.okhttp:okhttp:2.5.0'
+        testCompile 'junit:junit:4.12'
     }
 }
 

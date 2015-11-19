@@ -15,7 +15,9 @@
  *
  */
 
-package util.android.recyclerview;/*
+package util.android.recyclerview;
+
+/*
  * Copyright (C) 2014 skyfish.jy@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +40,8 @@ import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * Created by skyfishjy on 10/31/14.
+ *
+ * @author skyfishjy on 10/31/14.
  */
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {

@@ -24,7 +24,7 @@ Useage
           }
         }
     
-2. Add dependencies for TextViews.
+2. Add dependencies for CoreUtilities.
         
         dependencies {
             compile(group: 'util.android', name: 'library', version: '1.6.5', ext: 'jar')

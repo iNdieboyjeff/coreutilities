@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  * @see <a href="https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2">https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2</a>
  *
- * Created by jeffsutton on 10/08/15.
+ * @author Jeff Sutton
  */
 public class ColumnIndexCache {
     private HashMap<String, Integer> mCache = new HashMap<>();
