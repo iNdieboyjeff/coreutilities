@@ -46,12 +46,15 @@ public class OKHttpLoggingInterceptor implements Interceptor {
     @Override
     public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-
-        Buffer buffer = new Buffer();
-        request.body().writeTo(buffer);
-
         Log.d(LOG_TAG, "Request to:    [" + request.method() + "] " + request.urlString());
-        Log.d(LOG_TAG, "Request body:  " + buffer.readUtf8());
+
+        try {
+            if (request.body() != null) {
+                Buffer buffer = new Buffer();
+                request.body().writeTo(buffer);
+                Log.d(LOG_TAG, "Request body:  " + buffer.readUtf8());
+            }
+        } catch (Exception ignored) {}
 
         Headers headers = request.headers();
         for (Map.Entry<String, List<String>> entry : headers.toMultimap().entrySet()) {
