@@ -31,6 +31,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class MCrypt {
 
+    public static final String RIJNDAEL_128 = "AES/CBC/NoPadding";
+
     private String iv = "fedcba9876543210";// Dummy iv (CHANGE IT!)
     private final IvParameterSpec ivspec;
     private final SecretKeySpec keyspec;
@@ -39,12 +41,16 @@ public class MCrypt {
     private String SecretKey = "0123456789abcdef";// Dummy secretKey (CHANGE IT!)
 
     public MCrypt() {
+        this(RIJNDAEL_128);
+    }
+
+    public MCrypt(String method) {
         ivspec = new IvParameterSpec(iv.getBytes());
 
         keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
 
         try {
-            cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            cipher = Cipher.getInstance(method);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -52,6 +58,10 @@ public class MCrypt {
     }
 
     public MCrypt(String i, String s) {
+        this(i,s,RIJNDAEL_128);
+    }
+
+    public MCrypt(String i, String s, String method) {
         iv = i;
         SecretKey = s;
 
@@ -60,7 +70,7 @@ public class MCrypt {
         keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
 
         try {
-            cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            cipher = Cipher.getInstance(method);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
