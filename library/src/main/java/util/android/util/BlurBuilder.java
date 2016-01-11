@@ -41,7 +41,7 @@ public class BlurBuilder {
 		}
 	}
 
-	private static Bitmap getScreenshot(View v) {
+	public static Bitmap getScreenshot(View v) {
 		if (v.getWidth() == 0 || v.getHeight() == 0)
 			return null;
 		Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight(),
@@ -52,7 +52,7 @@ public class BlurBuilder {
 	}
 
 	@SuppressLint("NewApi")
-	private static Bitmap blur(Context ctx, Bitmap image) {
+	public static Bitmap blur(Context ctx, Bitmap image) {
 		if (image == null)
 			return null;
 		int width = Math.round(image.getWidth() * BITMAP_SCALE);
@@ -75,7 +75,7 @@ public class BlurBuilder {
 		return outputBitmap;
 	}
 
-	private static Bitmap blur(Bitmap sentBitmap, int radius) {
+	public static Bitmap blur(Bitmap sentBitmap, int radius) {
 
 		// Stack Blur v1.0 from
 		// http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
