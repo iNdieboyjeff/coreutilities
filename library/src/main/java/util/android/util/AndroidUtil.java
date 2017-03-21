@@ -104,25 +104,6 @@ public final class AndroidUtil {
                 + "; " + DeviceUtils.getDeviceTypeID(context) + ")";
     }
 
-    @SuppressLint("NewApi")
-    public static boolean hasNavigationBar(Context context) {
-        boolean hasNavigationBar;
-        hasNavigationBar = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !ViewConfiguration.get(context).hasPermanentMenuKey();
-        hasNavigationBar = hasNavigationBar && !DeviceUtils.isKindleFire();
-        return hasNavigationBar;
-    }
-
-
-    /**
-     * Return the current Android SDK version number.
-     *
-     * @return int
-     */
-    public static int getAndroidVersion() {
-        return Build.VERSION.SDK_INT;
-    }
-
-
     /**
      * Get the name of this app as specified in manifest.
      *
@@ -158,9 +139,15 @@ public final class AndroidUtil {
         return "Unknown";
     }
 
+    @SuppressLint("NewApi")
+    public static boolean hasNavigationBar(Context context) {
+        boolean hasNavigationBar;
+        hasNavigationBar = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !ViewConfiguration.get(context).hasPermanentMenuKey();
+        hasNavigationBar = hasNavigationBar && !DeviceUtils.isKindleFire();
+        return hasNavigationBar;
+    }
 
     /**
-     *
      * @param context
      * @param string
      * @return
@@ -169,7 +156,6 @@ public final class AndroidUtil {
     public static String getResourceString(Context context, int string) {
         return StringUtils.getResourceString(context, string);
     }
-
 
     public static boolean isMyServiceRunning(Context c, String name) {
         ActivityManager manager = (ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
@@ -187,7 +173,6 @@ public final class AndroidUtil {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
     public static void openActivity(Context context, Class<?> activity) {
         openActivity(context, activity, null);
@@ -224,7 +209,6 @@ public final class AndroidUtil {
         context.startActivity(intent);
     }
 
-
     /*
      * UI & WIDGETS
      */
@@ -232,21 +216,29 @@ public final class AndroidUtil {
         tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
+    public static boolean supportsGingerbread() {
+        return getAndroidVersion() >= ANDROID_VERSION_CODE_GINGERBREAD;
+    }
+
+    /**
+     * Return the current Android SDK version number.
+     *
+     * @return int
+     */
+    public static int getAndroidVersion() {
+        return Build.VERSION.SDK_INT;
+    }
+
+    public static boolean supportsLegacyVideo() {
+        Log.d("Build Model", Build.MODEL);
+        return (!AndroidUtil.supportsHoneycomb());
+    }
 
     /*
      * SUPPORT & VERSION
      */
     public static boolean supportsHoneycomb() {
         return getAndroidVersion() >= ANDROID_VERSION_CODE_HONEYCOMB;
-    }
-
-    public static boolean supportsGingerbread() {
-        return getAndroidVersion() >= ANDROID_VERSION_CODE_GINGERBREAD;
-    }
-
-    public static boolean supportsLegacyVideo() {
-        Log.d("Build Model", Build.MODEL);
-        return (!AndroidUtil.supportsHoneycomb());
     }
 
 

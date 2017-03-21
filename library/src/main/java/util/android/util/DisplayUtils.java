@@ -32,6 +32,16 @@ import android.view.WindowManager;
  */
 public class DisplayUtils {
 
+    public static int convertDpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
+
+    }
+
+    public static int convertPxToDp(Context context, int px) {
+        return pxToDp(context, px);
+    }
+
     /**
      * Convert a pixel value to device pixels.
      *
@@ -42,16 +52,6 @@ public class DisplayUtils {
     public static int pxToDp(Context context, int px) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources()
                 .getDisplayMetrics());
-    }
-
-    public static int convertDpToPx(Context context, int dp) {
-        float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
-
-    }
-
-    public static int convertPxToDp(Context context, int px) {
-        return pxToDp(context, px);
     }
 
     public static float getSmallestWidth(Context activity) {

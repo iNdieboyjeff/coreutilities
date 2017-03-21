@@ -69,11 +69,19 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
 
     @Override
-    public int getItemCount() {
-        if (mDataValid && mCursor != null) {
-            return mCursor.getCount();
+    public void onBindViewHolder(VH viewHolder, int position) {
+        if (!mDataValid) {
+            throw new IllegalStateException("this should only be called when the cursor is valid");
         }
-        return 0;
+        if (!mCursor.moveToPosition(position)) {
+            throw new IllegalStateException("couldn't move cursor to position " + position);
+        }
+        onBindViewHolder(viewHolder, mCursor);
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
     }
 
     @Override
@@ -85,22 +93,14 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
 
     @Override
-    public void setHasStableIds(boolean hasStableIds) {
-        super.setHasStableIds(true);
+    public int getItemCount() {
+        if (mDataValid && mCursor != null) {
+            return mCursor.getCount();
+        }
+        return 0;
     }
 
     public abstract void onBindViewHolder(VH viewHolder, Cursor cursor);
-
-    @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
-        if (!mDataValid) {
-            throw new IllegalStateException("this should only be called when the cursor is valid");
-        }
-        if (!mCursor.moveToPosition(position)) {
-            throw new IllegalStateException("couldn't move cursor to position " + position);
-        }
-        onBindViewHolder(viewHolder, mCursor);
-    }
 
     /**
      * Change the underlying cursor to a new cursor. If there is an existing cursor it will be

@@ -17,6 +17,7 @@
 
 package util.android.crypt;
 
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
@@ -24,8 +25,10 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+
 public class MCrypt {
 
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
     private String iv = "fedcba9876543210";// Dummy iv (CHANGE IT!)
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
@@ -34,9 +37,9 @@ public class MCrypt {
     private String SecretKey = "0123456789abcdef";// Dummy secretKey (CHANGE IT!)
 
     public MCrypt() {
-        ivspec = new IvParameterSpec(iv.getBytes());
+        ivspec = new IvParameterSpec(iv.getBytes(UTF_8));
 
-        keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
+        keyspec = new SecretKeySpec(SecretKey.getBytes(UTF_8), "AES");
 
         try {
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
@@ -53,52 +56,16 @@ public class MCrypt {
         iv = i;
         SecretKey = s;
 
-        ivspec = new IvParameterSpec(iv.getBytes());
+        ivspec = new IvParameterSpec(iv.getBytes(UTF_8));
 
-        keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
+        keyspec = new SecretKeySpec(SecretKey.getBytes(UTF_8), "AES");
 
         try {
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-
-    public byte[] encrypt(String text) throws Exception {
-        if (text == null || text.length() == 0)
-            throw new Exception("Empty string");
-
-        byte[] encrypted = null;
-
-        try {
-            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
-
-            encrypted = cipher.doFinal(padString(text).getBytes());
-        } catch (Exception e) {
-            throw new Exception("[encrypt] " + e.getMessage());
-        }
-
-        return encrypted;
-    }
-
-    public byte[] decrypt(String code) throws Exception {
-        if (code == null || code.length() == 0)
-            throw new Exception("Empty string");
-
-        byte[] decrypted = null;
-
-        try {
-            cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
-
-            decrypted = cipher.doFinal(hexToBytes(code));
-        } catch (Exception e) {
-            throw new Exception("[decrypt] " + e.getMessage());
-        }
-        return decrypted;
     }
 
     public static String bytesToHex(byte[] data) {
@@ -117,19 +84,21 @@ public class MCrypt {
         return str.toString();
     }
 
-    public static byte[] hexToBytes(String str) {
-        if (str == null) {
-            return null;
-        } else if (str.length() < 2) {
-            return null;
-        } else {
-            int len = str.length() / 2;
-            byte[] buffer = new byte[len];
-            for (int i = 0; i < len; i++) {
-                buffer[i] = (byte) Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16);
-            }
-            return buffer;
+    public byte[] encrypt(String text) throws Exception {
+        if (text == null || text.length() == 0)
+            throw new Exception("Empty string");
+
+        byte[] encrypted = null;
+
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
+
+            encrypted = cipher.doFinal(padString(text).getBytes(UTF_8));
+        } catch (Exception e) {
+            throw new Exception("[encrypt] " + e.getMessage());
         }
+
+        return encrypted;
     }
 
     private static String padString(String source) {
@@ -143,6 +112,37 @@ public class MCrypt {
         }
 
         return source;
+    }
+
+    public byte[] decrypt(String code) throws Exception {
+        if (code == null || code.length() == 0)
+            throw new Exception("Empty string");
+
+        byte[] decrypted = null;
+
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
+
+            decrypted = cipher.doFinal(hexToBytes(code));
+        } catch (Exception e) {
+            throw new Exception("[decrypt] " + e.getMessage());
+        }
+        return decrypted;
+    }
+
+    public static byte[] hexToBytes(String str) {
+        if (str == null) {
+            return null;
+        } else if (str.length() < 2) {
+            return null;
+        } else {
+            int len = str.length() / 2;
+            byte[] buffer = new byte[len];
+            for (int i = 0; i < len; i++) {
+                buffer[i] = (byte) Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16);
+            }
+            return buffer;
+        }
     }
 }
 

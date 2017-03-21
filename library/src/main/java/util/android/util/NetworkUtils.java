@@ -26,6 +26,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -86,7 +87,7 @@ public class NetworkUtils {
                 }
                 count += read;
             }
-            return isUTF8 ? new String(baos.toByteArray(), "UTF-8") : new String(baos.toByteArray());
+            return isUTF8 ? new String(baos.toByteArray(), "UTF-8") : new String(baos.toByteArray(), Charset.defaultCharset());
         } finally {
             try {
                 is.close();
@@ -136,9 +137,9 @@ public class NetworkUtils {
      */
     public static String getIPAddress(boolean useIPv4) {
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
                         return inetAddress.getHostAddress();

@@ -35,7 +35,6 @@ import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.TimeZone;
 
-@SuppressLint("SimpleDateFormat")
 public class DateUtils {
 
     public static final long MILLIS_PER_SECOND = 1000;
@@ -58,6 +57,20 @@ public class DateUtils {
     public static final int TIME_FORMAT_MINUTES = 2;
 
     public static final String[] TIME_SERVER = {"2.android.pool.ntp.org", "time.nist.gov", "pool.ntp.org"};
+    static final String[] suffixes = {
+            // 0 1 2 3 4 5 6 7 8 9
+            "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
+            // 10 11 12 13 14 15 16 17 18 19
+            "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
+            // 20 21 22 23 24 25 26 27 28 29
+            "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
+            // 30 31
+            "th", "st"
+    };
+    static final SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
+    static final SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
+    static final SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
+    static final SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
     /**
      * The masks used to validate and parse the input to an Atom date. These are a lot more forgiving than what the Atom
      * spec allows.
@@ -69,8 +82,6 @@ public class DateUtils {
             "yyyy-MM-dd'T'HH:mm'Z'", "yyyy-MM-dd't'HH:mm'z'", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-dd", "yyyy MM dd", "yyyy-MM", "yyyy"
     };
-
-
     private static final SimpleDateFormat[] atomFormats = {
             new SimpleDateFormat(atomMasks[0]),
             new SimpleDateFormat(atomMasks[1]),
@@ -92,42 +103,14 @@ public class DateUtils {
             new SimpleDateFormat(atomMasks[17]),
             new SimpleDateFormat(atomMasks[18])
     };
-
     private static final String[] ordinalMasks = {
             "EEEE d MMMM yyyy HH:mm:ss", "EEEE d MMMM yyyy"
     };
     private static final String[] timeMasks = {
             "HH:mm:ss.SSS", "HH:mm:ss", "HH:mm"
     };
-
     private static final SimpleDateFormat[] timeFormats = {new SimpleDateFormat(timeMasks[0]),
             new SimpleDateFormat(timeMasks[1]), new SimpleDateFormat(timeMasks[2])};
-
-    static final String[] suffixes = {
-            // 0 1 2 3 4 5 6 7 8 9
-            "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-            // 10 11 12 13 14 15 16 17 18 19
-            "th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
-            // 20 21 22 23 24 25 26 27 28 29
-            "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-            // 30 31
-            "th", "st"
-    };
-    static final SimpleDateFormat formatter24 = new SimpleDateFormat("HH:mm");
-    static final SimpleDateFormat formatter12 = new SimpleDateFormat("h.mma");
-
-    static final SimpleDateFormat dateAsString = new SimpleDateFormat("yyy-MM-dd");
-
-    static final SimpleDateFormat twiterFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy");
-
-    public static String getNTPServer() {
-        int max = TIME_SERVER.length;
-
-        Random r = new Random();
-        int i1 = r.nextInt(max - 1);
-
-        return TIME_SERVER[i1];
-    }
 
     /**
      * <p>
@@ -181,39 +164,6 @@ public class DateUtils {
         return sdf.format(inDate);
     }
 
-    /**
-     * Parse an Atom date String into Date object. This is a fairly lenient parse and does not require the date String
-     * to conform exactly.
-     *
-     * @param dateString
-     * @return Date
-     * @throws IllegalArgumentException
-     */
-    @SuppressLint("SimpleDateFormat")
-    public static Date parseAtomDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
-        Date d = null;
-        for (int n = 0; n < atomMasks.length; n++) {
-            try {
-                atomFormats[n].setTimeZone(timezone);
-                atomFormats[n].setLenient(true);
-                d = atomFormats[n].parse(dateString, new ParsePosition(0));
-                if (d != null)
-                    break;
-            } catch (Exception ignored) {
-            }
-        }
-        if (d == null) {
-            Log.e("DateUtils", "Cannot parse: " + dateString);
-            throw new IllegalArgumentException();
-        }
-        return d;
-    }
-
-    public static Date parseAtomDate(String dateString) {
-        return parseAtomDate(dateString, TZ_LONDON);
-    }
-
-
     public static Date parseTime(String dateString) throws IllegalArgumentException {
         Date d = null;
         for (int n = 0; n < timeMasks.length; n++) {
@@ -240,6 +190,12 @@ public class DateUtils {
         return timeFormats[format].format(time);
     }
 
+    public static String formatUserPrefTime(Context context, Date time, TimeZone timezone) {
+        SimpleDateFormat sdf = getLocalizedHHMMStamp(context);
+        sdf.setTimeZone(timezone);
+        return sdf.format(time);
+    }
+
     public static SimpleDateFormat getLocalizedHHMMStamp(Context context) {
 
         // According to users preferences the OS clock is displayed in 24 hour format
@@ -250,26 +206,19 @@ public class DateUtils {
         return formatter12;
     }
 
-    public static String formatUserPrefTime(Context context, Date time, TimeZone timezone) {
-        SimpleDateFormat sdf = getLocalizedHHMMStamp(context);
-        sdf.setTimeZone(timezone);
-        return sdf.format(time);
-    }
-
-
     /**
      * <p>
      * Try to parse an ordinal date in the format:
      * </p>
-     *
+     * <p>
      * <p>
      * Monday 1st July 2013
      * </p>
-     *
+     * <p>
      * <p>
      * SimpleDateFormat doesn't like st, nd, th, rd in dates so we modify the input String before processing.
      * </p>
-     *
+     * <p>
      * <p>
      * This function assumes GMT timezone.
      * </p>
@@ -281,16 +230,11 @@ public class DateUtils {
         return parseOrdinalDate(dateString, TZ_LONDON);
     }
 
-    public static Date getTwitterDate(String date) throws ParseException {
-        twiterFormat.setLenient(true);
-        return twiterFormat.parse(date);
-    }
-
     /**
      * Try to parse an ordinal date in the format:
-     *
+     * <p>
      * Monday 1st July 2013
-     *
+     * <p>
      * SimpleDateFormat doesn't like st, nd, th, rd in dates so we modify the input String before processing.
      *
      * @param dateString
@@ -316,6 +260,11 @@ public class DateUtils {
         if (d == null)
             throw new IllegalArgumentException();
         return d;
+    }
+
+    public static Date getTwitterDate(String date) throws ParseException {
+        twiterFormat.setLenient(true);
+        return twiterFormat.parse(date);
     }
 
     public static String getDurationString(Date start, Date end) {
@@ -427,6 +376,38 @@ public class DateUtils {
         return cal.getTime();
     }
 
+    public static Date parseAtomDate(String dateString) {
+        return parseAtomDate(dateString, TZ_LONDON);
+    }
+
+    /**
+     * Parse an Atom date String into Date object. This is a fairly lenient parse and does not require the date String
+     * to conform exactly.
+     *
+     * @param dateString
+     * @return Date
+     * @throws IllegalArgumentException
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static Date parseAtomDate(String dateString, TimeZone timezone) throws IllegalArgumentException {
+        Date d = null;
+        for (int n = 0; n < atomMasks.length; n++) {
+            try {
+                atomFormats[n].setTimeZone(timezone);
+                atomFormats[n].setLenient(true);
+                d = atomFormats[n].parse(dateString, new ParsePosition(0));
+                if (d != null)
+                    break;
+            } catch (Exception ignored) {
+            }
+        }
+        if (d == null) {
+            Log.e("DateUtils", "Cannot parse: " + dateString);
+            throw new IllegalArgumentException();
+        }
+        return d;
+    }
+
     public static boolean isYesterday(Date date) {
         Calendar c1 = Calendar.getInstance(); // today
         c1.add(Calendar.DAY_OF_YEAR, -1); // yesterday
@@ -478,6 +459,15 @@ public class DateUtils {
             e.printStackTrace();
             return new Date();
         }
+    }
+
+    public static String getNTPServer() {
+        int max = TIME_SERVER.length;
+
+        Random r = new Random();
+        int i1 = r.nextInt(max - 1);
+
+        return TIME_SERVER[i1];
     }
 
     public static Date toNearestWholeMinute(Date d, boolean canRoundUp) {

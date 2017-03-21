@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -35,30 +36,15 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SecurePreferences {
 
-    public static class SecurePreferencesException extends RuntimeException {
-
-        /**
-         *
-         */
-        private static final long serialVersionUID = -359323655915307692L;
-
-        public SecurePreferencesException(Throwable e) {
-            super(e);
-        }
-
-    }
-
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
     private static final String KEY_TRANSFORMATION = "AES/ECB/PKCS5Padding";
     private static final String SECRET_KEY_HASH_TRANSFORMATION = "SHA-256";
     private static final String CHARSET = "UTF-8";
-
     private final boolean encryptKeys;
     private final Cipher writer;
     private final Cipher reader;
     private final Cipher keyWriter;
     private final SharedPreferences preferences;
-
     /**
      * This will initialize an instance of the SecurePreferences class
      *
@@ -101,7 +87,7 @@ public class SecurePreferences {
 
     protected IvParameterSpec getIv() {
         byte[] iv = new byte[writer.getBlockSize()];
-        System.arraycopy("fldsjfodasjifudslfjdsaofshaufihadsf".getBytes(), 0, iv, 0, writer.getBlockSize());
+        System.arraycopy("fldsjfodasjifudslfjdsaofshaufihadsf".getBytes(Charset.forName(CHARSET)), 0, iv, 0, writer.getBlockSize());
         return new IvParameterSpec(iv);
     }
 
@@ -129,32 +115,10 @@ public class SecurePreferences {
         return preferences.contains(toKey(key));
     }
 
-    public void removeValue(String key) {
-        preferences.edit().remove(toKey(key)).commit();
-    }
-
-    public String getString(String key) throws SecurePreferencesException {
-        if (preferences.contains(toKey(key))) {
-            String securedEncodedValue = preferences.getString(toKey(key), "");
-            return decrypt(securedEncodedValue);
-        }
-        return null;
-    }
-
-    public void clear() {
-        preferences.edit().clear().commit();
-    }
-
     private String toKey(String key) {
         if (encryptKeys)
             return encrypt(key, keyWriter);
         else return key;
-    }
-
-    private void putValue(String key, String value) throws SecurePreferencesException {
-        String secureValueEncoded = encrypt(value, writer);
-
-        preferences.edit().putString(key, secureValueEncoded).commit();
     }
 
     protected String encrypt(String value, Cipher writer) throws SecurePreferencesException {
@@ -168,6 +132,26 @@ public class SecurePreferences {
         return secureValueEncoded;
     }
 
+    private static byte[] convert(Cipher cipher, byte[] bs) throws SecurePreferencesException {
+        try {
+            return cipher.doFinal(bs);
+        } catch (Exception e) {
+            throw new SecurePreferencesException(e);
+        }
+    }
+
+    public void removeValue(String key) {
+        preferences.edit().remove(toKey(key)).commit();
+    }
+
+    public String getString(String key) throws SecurePreferencesException {
+        if (preferences.contains(toKey(key))) {
+            String securedEncodedValue = preferences.getString(toKey(key), "");
+            return decrypt(securedEncodedValue);
+        }
+        return null;
+    }
+
     protected String decrypt(String securedEncodedValue) {
         byte[] securedValue = Base64.decode(securedEncodedValue, Base64.NO_WRAP);
         byte[] value = convert(reader, securedValue);
@@ -178,11 +162,26 @@ public class SecurePreferences {
         }
     }
 
-    private static byte[] convert(Cipher cipher, byte[] bs) throws SecurePreferencesException {
-        try {
-            return cipher.doFinal(bs);
-        } catch (Exception e) {
-            throw new SecurePreferencesException(e);
+    public void clear() {
+        preferences.edit().clear().commit();
+    }
+
+    private void putValue(String key, String value) throws SecurePreferencesException {
+        String secureValueEncoded = encrypt(value, writer);
+
+        preferences.edit().putString(key, secureValueEncoded).commit();
+    }
+
+    public static class SecurePreferencesException extends RuntimeException {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = -359323655915307692L;
+
+        public SecurePreferencesException(Throwable e) {
+            super(e);
         }
+
     }
 }

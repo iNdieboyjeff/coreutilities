@@ -56,6 +56,7 @@ public class DebugTrackingCursor extends SQLiteCursor {
         return openCursors;
     }
 
+    @Override
     public void close() {
         super.close();
         synchronized (DebugTrackingCursor.this) {

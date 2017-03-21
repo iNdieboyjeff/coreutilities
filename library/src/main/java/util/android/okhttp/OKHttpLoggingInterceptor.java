@@ -21,7 +21,6 @@ public class OKHttpLoggingInterceptor implements Interceptor {
     private static final String LOG_TAG = OKHttpLoggingInterceptor.class.getSimpleName();
 
     /**
-     *
      * @param chain
      * @return
      * @throws IOException

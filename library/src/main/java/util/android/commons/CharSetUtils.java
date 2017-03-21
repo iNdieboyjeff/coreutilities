@@ -267,6 +267,27 @@ public class CharSetUtils {
     //-----------------------------------------------------------------------
 
     /**
+     * Implementation of delete and keep
+     *
+     * @param str    String to modify characters within
+     * @param set    String[] set of characters to modify
+     * @param expect whether to evaluate on match, or non-match
+     * @return modified String
+     */
+    private static String modify(String str, String[] set, boolean expect) {
+        CharSet chars = CharSet.getInstance(set);
+        StringBuffer buffer = new StringBuffer(str.length());
+        char[] chrs = str.toCharArray();
+        int sz = chrs.length;
+        for (int i = 0; i < sz; i++) {
+            if (chars.contains(chrs[i]) == expect) {
+                buffer.append(chrs[i]);
+            }
+        }
+        return buffer.toString();
+    }
+
+    /**
      * <p>Takes an argument in set-syntax, see evaluateSet,
      * and deletes any of characters present in the specified string.</p>
      * <p>
@@ -293,6 +314,8 @@ public class CharSetUtils {
         return delete(str, strs);
     }
 
+    //-----------------------------------------------------------------------
+
     /**
      * <p>Takes an argument in set-syntax, see evaluateSet,
      * and deletes any of characters present in the specified string.</p>
@@ -313,29 +336,6 @@ public class CharSetUtils {
             return str;
         }
         return modify(str, set, false);
-    }
-
-    //-----------------------------------------------------------------------
-
-    /**
-     * Implementation of delete and keep
-     *
-     * @param str    String to modify characters within
-     * @param set    String[] set of characters to modify
-     * @param expect whether to evaluate on match, or non-match
-     * @return modified String
-     */
-    private static String modify(String str, String[] set, boolean expect) {
-        CharSet chars = CharSet.getInstance(set);
-        StringBuffer buffer = new StringBuffer(str.length());
-        char[] chrs = str.toCharArray();
-        int sz = chrs.length;
-        for (int i = 0; i < sz; i++) {
-            if (chars.contains(chrs[i]) == expect) {
-                buffer.append(chrs[i]);
-            }
-        }
-        return buffer.toString();
     }
 
     // Translate

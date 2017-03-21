@@ -26,7 +26,7 @@ import java.util.HashMap;
  * to cache the results of this lookup in a HashMap for faster access.</p>
  *
  * @see <a href="https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2">https://medium.com/android-news/using-a-cache-to-optimize-data-retrieval-from-cursors-56f9eaa1e0d2</a>
- *
+ * <p>
  * Created by jeffsutton on 10/08/15.
  */
 public class ColumnIndexCache {

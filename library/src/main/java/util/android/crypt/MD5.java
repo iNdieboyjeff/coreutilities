@@ -17,6 +17,7 @@
 
 package util.android.crypt;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -25,13 +26,15 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5 {
 
+    private static Charset UTF_8 = Charset.forName("UTF-8");
+
     public static final String createHash(final String s) {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash
             MessageDigest digest = MessageDigest
                     .getInstance(MD5);
-            digest.update(s.getBytes());
+            digest.update(s.getBytes(UTF_8));
             byte messageDigest[] = digest.digest();
 
             // Create Hex String

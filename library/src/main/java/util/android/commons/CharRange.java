@@ -69,29 +69,6 @@ public final class CharRange implements Serializable {
     }
 
     /**
-     * <p>Constructs a <code>CharRange</code> over a single character,
-     * optionally negating the range.</p>
-     * <p>
-     * <p>A negated range includes everything except the specified char.</p>
-     *
-     * @param ch      only character in this range
-     * @param negated true to express everything except the range
-     */
-    public CharRange(char ch, boolean negated) {
-        this(ch, ch, negated);
-    }
-
-    /**
-     * <p>Constructs a <code>CharRange</code> over a set of characters.</p>
-     *
-     * @param start first character, inclusive, in this range
-     * @param end   last character, inclusive, in this range
-     */
-    public CharRange(char start, char end) {
-        this(start, end, false);
-    }
-
-    /**
      * <p>Constructs a <code>CharRange</code> over a set of characters,
      * optionally negating the range.</p>
      * <p>
@@ -118,6 +95,29 @@ public final class CharRange implements Serializable {
         this.negated = negated;
     }
 
+    /**
+     * <p>Constructs a <code>CharRange</code> over a single character,
+     * optionally negating the range.</p>
+     * <p>
+     * <p>A negated range includes everything except the specified char.</p>
+     *
+     * @param ch      only character in this range
+     * @param negated true to express everything except the range
+     */
+    public CharRange(char ch, boolean negated) {
+        this(ch, ch, negated);
+    }
+
+    /**
+     * <p>Constructs a <code>CharRange</code> over a set of characters.</p>
+     *
+     * @param start first character, inclusive, in this range
+     * @param end   last character, inclusive, in this range
+     */
+    public CharRange(char start, char end) {
+        this(start, end, false);
+    }
+
     // Accessors
     //-----------------------------------------------------------------------
 
@@ -140,21 +140,6 @@ public final class CharRange implements Serializable {
     }
 
     /**
-     * <p>Is this <code>CharRange</code> negated.</p>
-     * <p>
-     * <p>A negated range includes everything except that defined by the
-     * start and end characters.</p>
-     *
-     * @return <code>true</code> is negated
-     */
-    public boolean isNegated() {
-        return negated;
-    }
-
-    // Contains
-    //-----------------------------------------------------------------------
-
-    /**
      * <p>Is the character specified contained in this range.</p>
      *
      * @param ch the character to check
@@ -163,6 +148,9 @@ public final class CharRange implements Serializable {
     public boolean contains(char ch) {
         return (ch >= start && ch <= end) != negated;
     }
+
+    // Contains
+    //-----------------------------------------------------------------------
 
     /**
      * <p>Are all the characters of the passed in range contained in
@@ -191,6 +179,16 @@ public final class CharRange implements Serializable {
         }
     }
 
+    /**
+     * <p>Gets a hashCode compatible with the equals method.</p>
+     *
+     * @return a suitable hashCode
+     */
+    @Override
+    public int hashCode() {
+        return 83 + start + 7 * end + (negated ? 1 : 0);
+    }
+
     // Basics
     //-----------------------------------------------------------------------
 
@@ -201,11 +199,12 @@ public final class CharRange implements Serializable {
      * @param obj the object to compare to
      * @return true if equal
      */
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof CharRange == false) {
+        if (!(obj instanceof CharRange)) {
             return false;
         }
         CharRange other = (CharRange) obj;
@@ -213,19 +212,11 @@ public final class CharRange implements Serializable {
     }
 
     /**
-     * <p>Gets a hashCode compatible with the equals method.</p>
-     *
-     * @return a suitable hashCode
-     */
-    public int hashCode() {
-        return 83 + start + 7 * end + (negated ? 1 : 0);
-    }
-
-    /**
      * <p>Gets a string representation of the character range.</p>
      *
      * @return string representation of this range
      */
+    @Override
     public String toString() {
         if (iToString == null) {
             StringBuffer buf = new StringBuffer(4);
@@ -240,6 +231,18 @@ public final class CharRange implements Serializable {
             iToString = buf.toString();
         }
         return iToString;
+    }
+
+    /**
+     * <p>Is this <code>CharRange</code> negated.</p>
+     * <p>
+     * <p>A negated range includes everything except that defined by the
+     * start and end characters.</p>
+     *
+     * @return <code>true</code> is negated
+     */
+    public boolean isNegated() {
+        return negated;
     }
 
 }

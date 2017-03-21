@@ -46,6 +46,12 @@ public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
         this.adapterclass = adapterclass;
     }
 
+    @Override
+    public void write(JsonWriter writer, List<T> value) throws IOException {
+
+    }
+
+    @Override
     public List<T> read(JsonReader reader) throws IOException {
 
         List<T> list = new ArrayList<T>();
@@ -70,10 +76,6 @@ public class ArrayAdapter<T> extends TypeAdapter<List<T>> {
         }
 
         return list;
-    }
-
-    public void write(JsonWriter writer, List<T> value) throws IOException {
-
     }
 
 }

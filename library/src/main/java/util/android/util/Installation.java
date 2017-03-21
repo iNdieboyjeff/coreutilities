@@ -23,11 +23,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 public class Installation {
-    private static String sID = null;
     private static final String INSTALLATION = "INSTALLATION";
+    private static String sID = null;
 
     public synchronized static String id(Context context) {
         if (sID == null) {
@@ -43,18 +44,18 @@ public class Installation {
         return sID;
     }
 
+    private static void writeInstallationFile(File installation) throws IOException {
+        FileOutputStream out = new FileOutputStream(installation);
+        String id = UUID.randomUUID().toString();
+        out.write(id.getBytes(Charset.forName("UTF-8")));
+        out.close();
+    }
+
     private static String readInstallationFile(File installation) throws IOException {
         RandomAccessFile f = new RandomAccessFile(installation, "r");
         byte[] bytes = new byte[(int) f.length()];
         f.readFully(bytes);
         f.close();
-        return new String(bytes);
-    }
-
-    private static void writeInstallationFile(File installation) throws IOException {
-        FileOutputStream out = new FileOutputStream(installation);
-        String id = UUID.randomUUID().toString();
-        out.write(id.getBytes());
-        out.close();
+        return new String(bytes, Charset.forName("UTF-8"));
     }
 }

@@ -111,6 +111,42 @@ public class CharSet implements Serializable {
     }
 
     /**
+     * <p>Add a set definition string to the <code>CharSet</code>.</p>
+     *
+     * @param str set definition string
+     */
+    protected void add(String str) {
+        if (str == null) {
+            return;
+        }
+
+        int len = str.length();
+        int pos = 0;
+        while (pos < len) {
+            int remainder = (len - pos);
+            if (remainder >= 4 && str.charAt(pos) == '^' && str.charAt(pos + 2) == '-') {
+                // negated range
+                set.add(new CharRange(str.charAt(pos + 1), str.charAt(pos + 3), true));
+                pos += 4;
+            } else if (remainder >= 3 && str.charAt(pos + 1) == '-') {
+                // range
+                set.add(new CharRange(str.charAt(pos), str.charAt(pos + 2)));
+                pos += 3;
+            } else if (remainder >= 2 && str.charAt(pos) == '^') {
+                // negated char
+                set.add(new CharRange(str.charAt(pos + 1), true));
+                pos += 2;
+            } else {
+                // char
+                set.add(new CharRange(str.charAt(pos)));
+                pos += 1;
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+
+    /**
      * <p>Constructs a new CharSet using the set syntax.
      * Each string is merged in with the set.</p>
      *
@@ -124,8 +160,6 @@ public class CharSet implements Serializable {
             add(set[i]);
         }
     }
-
-    //-----------------------------------------------------------------------
 
     /**
      * <p>Factory method to create a new CharSet using a special syntax.</p>
@@ -178,6 +212,8 @@ public class CharSet implements Serializable {
         return new CharSet(setStr);
     }
 
+    //-----------------------------------------------------------------------
+
     /**
      * <p>Constructs a new CharSet using the set syntax.
      * Each string is merged in with the set.</p>
@@ -191,42 +227,6 @@ public class CharSet implements Serializable {
             return null;
         }
         return new CharSet(setStrs);
-    }
-
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Add a set definition string to the <code>CharSet</code>.</p>
-     *
-     * @param str set definition string
-     */
-    protected void add(String str) {
-        if (str == null) {
-            return;
-        }
-
-        int len = str.length();
-        int pos = 0;
-        while (pos < len) {
-            int remainder = (len - pos);
-            if (remainder >= 4 && str.charAt(pos) == '^' && str.charAt(pos + 2) == '-') {
-                // negated range
-                set.add(new CharRange(str.charAt(pos + 1), str.charAt(pos + 3), true));
-                pos += 4;
-            } else if (remainder >= 3 && str.charAt(pos + 1) == '-') {
-                // range
-                set.add(new CharRange(str.charAt(pos), str.charAt(pos + 2)));
-                pos += 3;
-            } else if (remainder >= 2 && str.charAt(pos) == '^') {
-                // negated char
-                set.add(new CharRange(str.charAt(pos + 1), true));
-                pos += 2;
-            } else {
-                // char
-                set.add(new CharRange(str.charAt(pos)));
-                pos += 1;
-            }
-        }
     }
 
     //-----------------------------------------------------------------------
@@ -264,6 +264,17 @@ public class CharSet implements Serializable {
     //-----------------------------------------------------------------------
 
     /**
+     * <p>Gets a hashCode compatible with the equals method.</p>
+     *
+     * @return a suitable hashCode
+     * @since 2.0
+     */
+    @Override
+    public int hashCode() {
+        return 89 + set.hashCode();
+    }
+
+    /**
      * <p>Compares two CharSet objects, returning true if they represent
      * exactly the same set of characters defined in the same way.</p>
      * <p>
@@ -274,11 +285,12 @@ public class CharSet implements Serializable {
      * @return true if equal
      * @since 2.0
      */
+    @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof CharSet == false) {
+        if (!(obj instanceof CharSet)) {
             return false;
         }
         CharSet other = (CharSet) obj;
@@ -286,20 +298,11 @@ public class CharSet implements Serializable {
     }
 
     /**
-     * <p>Gets a hashCode compatible with the equals method.</p>
-     *
-     * @return a suitable hashCode
-     * @since 2.0
-     */
-    public int hashCode() {
-        return 89 + set.hashCode();
-    }
-
-    /**
      * <p>Gets a string representation of the set.</p>
      *
      * @return string representation of the set
      */
+    @Override
     public String toString() {
         return set.toString();
     }

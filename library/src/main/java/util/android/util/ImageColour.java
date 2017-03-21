@@ -60,24 +60,6 @@ public class ImageColour {
         colour = colourHex;
     }
 
-    public static String getMostCommonColour(Map map) {
-
-        List list = new LinkedList(map.entrySet());
-        Collections.sort(list, new Comparator() {
-            public int compare(Object o1, Object o2) {
-
-                return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
-
-            }
-
-        });
-
-        Map.Entry me = (Map.Entry) list.get(list.size() - 1);
-        int[] rgb = getRGBArr((Integer) me.getKey());
-
-        return Integer.toHexString(rgb[0]) + " " + Integer.toHexString(rgb[1]) + " " + Integer.toHexString(rgb[2]);
-    }
-
     public static int[] getRGBArr(int pixel) {
 
         int red = (pixel >> 16) & 0xff;
@@ -105,6 +87,25 @@ public class ImageColour {
             }
 
         return true;
+    }
+
+    public static String getMostCommonColour(Map map) {
+
+        List list = new LinkedList(map.entrySet());
+        Collections.sort(list, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+
+                return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
+
+            }
+
+        });
+
+        Map.Entry me = (Map.Entry) list.get(list.size() - 1);
+        int[] rgb = getRGBArr((Integer) me.getKey());
+
+        return Integer.toHexString(rgb[0]) + " " + Integer.toHexString(rgb[1]) + " " + Integer.toHexString(rgb[2]);
     }
 
     public String returnColour() {

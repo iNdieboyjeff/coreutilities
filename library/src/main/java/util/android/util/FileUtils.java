@@ -24,6 +24,27 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class FileUtils {
+    public static byte[] readBinaryFile(String pathname) throws IOException {
+        File file = new File(pathname);
+        byte[] fileData = new byte[(int) file.length()];
+        DataInputStream dis = new DataInputStream(new FileInputStream(file));
+        dis.readFully(fileData);
+        dis.close();
+        return fileData;
+    }
+
+    /**
+     * Open a file at <i>pathname</i> and read it's contents into a String. This method assumes a UTF-8 character
+     * encoding.
+     *
+     * @param pathname
+     * @return String
+     * @throws IOException
+     */
+    public static String readFile(String pathname) throws IOException {
+        return readFile(pathname, "UTF-8");
+    }
+
     /**
      * Open a file at <i>pathname</i> and read it's contents into a String.
      *
@@ -47,27 +68,6 @@ public class FileUtils {
         } finally {
             scanner.close();
         }
-    }
-
-    public static byte[] readBinaryFile(String pathname) throws IOException {
-        File file = new File(pathname);
-        byte[] fileData = new byte[(int) file.length()];
-        DataInputStream dis = new DataInputStream(new FileInputStream(file));
-        dis.readFully(fileData);
-        dis.close();
-        return fileData;
-    }
-
-    /**
-     * Open a file at <i>pathname</i> and read it's contents into a String. This method assumes a UTF-8 character
-     * encoding.
-     *
-     * @param pathname
-     * @return String
-     * @throws IOException
-     */
-    public static String readFile(String pathname) throws IOException {
-        return readFile(pathname, "UTF-8");
     }
 
     public static void touch(File file) throws IOException {

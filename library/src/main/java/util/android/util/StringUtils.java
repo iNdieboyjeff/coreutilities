@@ -34,7 +34,7 @@ public class StringUtils {
 
     /**
      * <p>Get a resource string for a specific locale.</p>
-     *
+     * <p>
      * <p>This should be used sparingly, and if you need a lot of strings from a different
      * Locale you should consider implementing your own method, as the resource configuration
      * done here is an expensive task.</p>
